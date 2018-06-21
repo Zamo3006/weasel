@@ -8,8 +8,6 @@ sap.ui.define([
 	MessageToast) {
 	"use strict";
 
-	var areal;
-	
 	var IconTabBarController = Controller.extend("sap.m.sample.IconTabBarProcess.IconTabBar", {
 
 	});
