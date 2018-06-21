@@ -3,4 +3,19 @@
 	xmlns:l="sap.ui.layout" 
 	xmlns:f="sap.ui.layout.form" >
 	<Text text = "Beladen"></Text>
+	
+	<f:SimpleForm editable="true"> 
+	<f:content class="BoxesButtonsContent">
+			<Button class="BoxButton1" id="BoxButton1" text="BOX 1" press="boxButtonPickPressed"/>
+			<Button class="BoxButton2" id="BoxButton2" text="BOX 2" press="boxButtonPickPressed"/>
+			<Button class="BoxButton3" id="BoxButton3" text="BOX 3" press="boxButtonPickPressed"/>
+			<Button class="BoxButton4" id="BoxButton4" text="BOX 4" press="boxButtonPickPressed"></Button>
+			<Button class="BoxButton5" id="BoxButton5" text="BOX 5" press="boxButtonPickPressed"/>
+			<Button class="BoxButton6" id="BoxButton6" text="BOX 6" press="boxButtonPickPressed"/>
+			<Button class="BodButton7" id="BoxButton7" text="BOX 7" press="boxButtonPickPressed"/>
+			<Button class="BoxButton8" id="BoxButton8" text="BOX 8" press="boxButtonPickPressed"/>
+	</f:content>
+		
+</f:SimpleForm>
+	
 </mvc:View>
