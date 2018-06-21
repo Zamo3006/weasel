@@ -1,0 +1,49 @@
+<mvc:View
+	controllerName="weasel.challenge.controller.CoreView" 
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:f="sap.ui.layout.form" 
+	xmlns="sap.m"
+	displayBlock="true" >
+	<App>
+		<pages>
+			<Page title="{i18n>title}">
+				<IconTabBar
+					id="tab_id"
+					expanded="{device>/isNoPhone}"
+					class="sapUiResponsiveContentPadding"
+					
+					expandable = "false">
+					<items>
+						<IconTabFilter
+							key="Start"
+							text="Start">
+							<mvc:XMLView viewName="weasel.challenge.view.StartView"/>
+							
+						</IconTabFilter>
+						<IconTabFilter
+							key="Beladen"
+							text="Beladen">
+							<mvc:XMLView viewName="weasel.challenge.view.BeladenView"/>
+						
+						</IconTabFilter>
+						<IconTabFilter
+							key="Entladen"
+							text="Entladen">
+							<mvc:XMLView viewName="weasel.challenge.view.EntladenView"/>
+						</IconTabFilter>
+						<IconTabFilter
+							key="Route"
+							text="Route">
+							<mvc:XMLView viewName="weasel.challenge.view.RouteView"/>
+						</IconTabFilter>
+					</items>
+				</IconTabBar>
+				<content>
+				
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

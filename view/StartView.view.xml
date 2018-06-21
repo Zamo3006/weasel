@@ -1,0 +1,61 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="weasel.challenge.controller.StartView"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:l="sap.ui.layout" 
+	xmlns:f="sap.ui.layout.form" > 
+	
+	<f:SimpleForm editable="true"> 
+		<f:content class="StartAndStopContent">			
+		<Button class="StartButton"
+			id="StartButton"
+			text="START"
+			press="startButtonPressed" ></Button>
+		<Button class="StopButton"
+			id="StopButton"
+			text="STOP"
+			press="stopButtonPressed" ></Button>
+			</f:content>
+	
+		<f:content class="ValidateStartContent">	
+		<Label class = "LabelValidateStartPos"
+						text = "Startposition" />
+		<Input
+			id = "Startpos"
+			value = ""
+			enabled = "true" />
+		<Button class = "ValidateStartPosButton"
+			id = "ValidateStartPsButton"
+			text = "VALIDATE"
+			press = "validateStartPosButtonPressed" ></Button>
+		</f:content>
+		
+		<f:content class="RouteContent">
+		<Button class = "CalculateRouteButton"
+			id = "CalculateRouteButton"
+			text = "CALCULATE ROUTE"
+			press = "calculateRouteButtonPressed" />
+		<Button class = "ResetRouteButton"
+			id = "ResetRouteButton"
+			text = "RESET ROUTE"
+			press = "resetRouteButtonPressed" />
+		<Label class = "OrderIDLabel"
+			text = "Order ID"/>
+		<Text class = "OrderIDOutput"
+			id = "OrderID"
+			text = "ORDERID"></Text>
+		</f:content>
+		
+		<f:content class = "specialRouteContent">
+		<Label class = "RfidTagLabel"
+			text = "Go to RfID" />
+		<Input class = "RfidTagInput"
+			id = "RfidTagInput"
+			value = ""
+			enabled = "true" />
+		<Button class = "GoToRfidTagButton"
+			id = "GooRfidTagButton"
+			text = "GO"
+			press = "goToRfidTagButtonPressed"></Button>
+		</f:content>
+		
+</f:SimpleForm>
+</mvc:View>

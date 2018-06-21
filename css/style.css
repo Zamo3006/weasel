@@ -1,0 +1,37 @@
+/* Enter your custom styles here */
+
+body {
+/* padding-left: 11em;*/
+  font-family: Georgia, "Times New Roman",
+        Times, serif;
+  color: purple;
+  background-color: #d8da3d }
+
+.LabelAreal {
+	padding-left: 20em;
+}
+
+
+
+.StartButton {
+	color: #4CAF50; /* Green Startbutton*/
+    border: none;
+    color: white;
+    padding-left: 20em;
+    width: 50em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+} 
+
+.StopButton {
+	border: none;
+    color: white;
+    padding-left: 20em;
+    width: 50em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+} 
