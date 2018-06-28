@@ -6,7 +6,15 @@ sap.ui.define([
 	"use strict";
 
 	return {
+		/*
+		createScanTextModel: function() {
 
+			var oModel = new JSONModel();
+			var data = "BoxDataNotSet";
+			oModel.setData(data);
+			return oModel;
+		},
+		*/
 		createDeviceModel: function() {
 			var oModel = new JSONModel(Device);
 			oModel.setDefaultBindingMode("OneWay");
