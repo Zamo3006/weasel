@@ -47,9 +47,9 @@ sap.ui.getCore().AppContext.findSfa = function(Sfas, team) {
 		//add
 		var boxx = Sfas[index];
 		if (boxx.Sfanr.indexOf(team) !== -1) {
-			//TODO boxNumber
-			var boxNr = boxx.Sfanr.substring(1, 1);
+			var boxNr = boxx.Ladetraeger.substring(8);
 			boxes[boxNr] = {
+				Id: boxx.Sfanr,
 				Nr: boxNr,
 				Station: boxx.KnotenVon,
 				loaded: 0
