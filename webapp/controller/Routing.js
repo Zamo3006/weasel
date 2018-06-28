@@ -1,7 +1,7 @@
 sap.ui.getCore().AppContext.boxes = [];
 sap.ui.getCore().AppContext.stations = [];
 
-//parse boxes by team and number and put them ordered into boxes array
+//parse boxes by team and number and put them ordered into boxes array; sfas entspricht array mit boxen und deren eigenschaften
 sap.ui.getCore().AppContext.findSfa = function(Sfas, team) {
 	//create stations
 	var stations;

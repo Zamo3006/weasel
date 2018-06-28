@@ -39,6 +39,18 @@ sap.ui.define([
 		goToRfidTagButtonPressed: function(oEvent){
 			
 		},
+		
+		boxButtonPickPressed: function(oEvent){
+			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			sap.ui.getCore().AppContext.boxes[boxId].loaded = 1;
+			var station = sap.ui.getCore().AppContext.stations.filter(station.NR = boxId);
+			station.NumberOfBoxes--;
+			
+				MessageToast.show("Boxnr.: " + boxId, {
+						duration: 5000
+					});
+			//sap.ui.getCore().AppContext.stations[]
+		},
 
 		onInit: function() {
 			this.weaselId = "AV101";
@@ -79,7 +91,7 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
-		// send weasel to position
+		// send weasel to position  = go to rfid tag
 		sendWeaselToPosition: function(destination) {
 			this.getView().getModel("weasel").update(
 				"/SSIUpdatePos(Weaselid='" + this.weaselId + "')", {
@@ -159,7 +171,7 @@ sap.ui.define([
 			}, null, null, true);
 		},
 		
-		// set SFA Status
+		// set SFA Status = Stoppen vom fahrauftrag
 		setSfaStatus: function(sfa, status) {
 			this.getView().getModel("challenge").update(
 				"/SfaStatus(Sfanr='" + sfa + "')", {
@@ -178,9 +190,13 @@ sap.ui.define([
 				}
 			);
 		},
+		
+		//sfa für box beladen
 		pickupSfa: function(sfa) {
 			this.setSfaStatus(sfa, "50");
 		},
+		
+		//sfa für entalden von box auf ziel
 		setdownSfa: function(sfa) {
 			this.setSfaStatus(sfa, "80");
 		},
