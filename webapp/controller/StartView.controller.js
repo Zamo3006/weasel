@@ -8,61 +8,35 @@ sap.ui.define([
 	MessageToast) {
 	"use strict";
 
-	var areal;
-
 	return Controller.extend("weasel.challenge.controller.StartView", {
 
 		onPress: function(oEvent) {
 			this.getWeaselStatus();
 			oEvent.getSource().setText(sap.ui.getCore().AppContext.weaselId);
-		
-		},
-		
-		startButtonPressed: function()  {
-			areal = this.byId("inputField").getValue();
-			if(areal ==="" || areal === null){
-				MessageToast.show("Error", {
-							duration: 5000
-						});
-		/*	}else if(areal === "Hallo"){
-							MessageToast.show("Hallo!", {
-							duration: 5000
-						});*/
-			}else{
-				MessageToast.show("hat geklappt", {
-							duration: 5000
-						});
-				//this.startChallenge(areal);
-						
-			}
-	/*		if (areal !== "" || areal !== null){
-				
-				this.startChallenge(areal);
-			}else{
-				MessageToast.show("Error", {
-							duration: 5000
-						});
-			}*/
-			//this.byId("button").setVisible(false);
-		},
-		
-			stopButtonPressed: function(){
 			
 		},
 		
-		validateStartPosButtonPressed: function(){
+		startButtonPressed: function(oEvent)  {
+		
+		},
+		
+		stopButtonPressed: function(oEvent){
 			
 		},
 		
-		calculateRouteButtonPressed: function(){
+		validateStartPosButtonPressed: function(oEvent){
 			
 		},
 		
-		resetRouteButtonPressed: function(){
+		calculateRouteButtonPressed: function(oEvent){
 			
 		},
 		
-		goToRfidTagButtonPressed: function(){
+		resetRouteButtonPressed: function(oEvent){
+			
+		},
+		
+		goToRfidTagButtonPressed: function(oEvent){
 			
 		},
 
@@ -70,6 +44,7 @@ sap.ui.define([
 			this.weaselId = "AV101";
 			sap.ui.getCore().AppContext.weaselId = "AV101";
 			this.areal = "wslc1";
+			this.team = 2;
 		},
 
 		// get current status of weasel
@@ -167,6 +142,12 @@ sap.ui.define([
 			this.getView().getModel("challenge").read("/OffeneSfa", {
 				filters: aFilters,
 				success: function(data) {
+					/*  Sfanr
+						ArealVon
+						KnotenVon
+						ArealNach
+						KnotenNach
+					*/
 					sap.ui.getCore().AppContext.Sfas = data.results;
 				},
 				error: function(e) {
