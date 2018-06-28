@@ -18,7 +18,7 @@ sap.ui.define([
 		},
 		
 		startButtonPressed: function(oEvent)  {
-			startChallenge)();
+			
 		},
 		
 		stopButtonPressed: function(oEvent){
