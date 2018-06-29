@@ -86,6 +86,7 @@ sap.ui.define([
 
 		resetRouteButtonPressed: function(oEvent) {
 			//this.getSfas();
+			this.setSfas();
 			//console.log(sap.ui.getCore().AppContext.Sfas);
 			this.getView().getModel("test").read("/Customer", {
 				success: function(data) {
@@ -305,7 +306,25 @@ sap.ui.define([
 						duration: 5000
 					});
 				},
-				async: true
+				async: false
+			}, null, null, true);
+		},
+
+		setSfas: function() {
+			var aFilters = [new Filter({
+				path: "ExternalSystem",
+				operator: FilterOperator.EQ,
+				value1: this.areal
+			})];
+			this.getView().getModel("challenge").update("/OffeneSfa",{}, {
+				filters: aFilters,
+				success: function() {},
+				error: function(e) {
+					MessageToast.show(e, {
+						duration: 5000
+					});
+				},
+				async: false
 			}, null, null, true);
 		},
 
@@ -372,9 +391,9 @@ sap.ui.define([
 		routingFunction: function(start) {
 
 			//boxes {nr, station, lvl, loaded}
-			var boxes = sap.ui.getCore().AppContext.boxes;
+			var boxes;
 			//station {nr, Boxes, #Boxes, Lvl)
-			var stations = sap.ui.getCore().AppContext.stations;
+			var stations;
 			//need for sorting in LvL1
 			var sortingNecessary = 0;
 			//sorting possible while fetching
@@ -388,25 +407,21 @@ sap.ui.define([
 			//# of lvl2 stations with uneven # of boxes
 			var unevenLvlTwos;
 			//currently loaded boxes
-			var currentBoxes;
+			var currentBoxes = [];
 			//current station
 			var currentStation;
 			//fetchFinishedvar route;
 
 			//Helper Functions
-			//decide which boxes to pick
-			function pickBoxes() {
 
-			}
-			//decide next lvl 1 station
-			function findLevelTwo() {
-				pickBoxes();
+			function isLevelTwo(station) {
+				return station.Level == 2;
 			}
 
-			//decide next lvl 2 station
-			function findLevelOne() {
-				pickBoxes();
+			function isLevelOne(station) {
+				return station.Level == 1;
 			}
+
 
 			//update sorting necessity
 			function updateSorting() {
@@ -423,6 +438,33 @@ sap.ui.define([
 				}
 			}
 
+			//init values
+			function init() {
+				boxes = sap.ui.getCore().AppContext.boxes;
+				stations = sap.ui.getCore().AppContext.stations;
+
+				function even(station) {
+					return station.NumberOfBoxes % 2 == 0;
+				}
+				evenLvlTwos = stations.filter(isLevelTwo).filter(even()).length;
+				unevenLvlTwos = 3 - evenLvlTwos;
+				updateSorting();
+			}
+
+			//decide which boxes to pick
+			function pickBoxes() {
+
+			}
+			//decide next lvl 1 station
+			function findLevelTwo() {
+				pickBoxes();
+			}
+
+			//decide next lvl 2 station
+			function findLevelOne() {
+				pickBoxes();
+			}
+
 			function updateFinished() {
 				if ((stations[13].NumberOfBoxes + stations[14].NumberOfBoxes) == 8) {
 					fetchFinished = 1;
@@ -435,9 +477,10 @@ sap.ui.define([
 			}
 
 			//routing
+			init();
 			//loop transport boxes to lvl1 stations
 			while (!fetchFinished) {
-				//TODO sorting stuff
+				updateSorting();
 				findLevelTwo();
 				findLevelOne();
 				updateFinished();
