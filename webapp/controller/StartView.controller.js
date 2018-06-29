@@ -19,53 +19,55 @@ sap.ui.define([
 		},
 
 		testBoxes: function() {
-			 this.testBoxes = ({
+			 this.testBoxesArray = [{
 				Ladetraeger: "Kiste-21",
-				SfaNr : 7321,
+				Sfanr : 7321,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-22",
-				SfaNr : 7322,
+				Sfanr : 7322,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-23",
-				SfaNr : 7323,
+				Sfanr : 7323,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-24",
-				SfaNr : 7334,
+				Sfanr : 7334,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-25",
-				SfaNr : 7325,
+				Sfanr : 7325,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-26",
-				SfaNr : 7326,
+				Sfanr : 7326,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-27",
-				SfaNr : 7327,
+				Sfanr : 7327,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-28",
-				SfaNr : 7328,
+				Sfanr : 7328,
 				KnotenVon : 13
 			}, {
 				Ladetraeger: "Kiste-11",
-				SfaNr : 7329,
+				Sfanr : 7329,
 				KnotenVon : 13
-			});
+			}];
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-			var position = this.byId("RfidTagInput").getValue();
-			this.getSfas();
-			//	this.getWeaselStatus();
+			//var position = this.byId("RfidTagInput").getValue();
+			//this.getSfas();
+		//	this.writeWeaselStatus();
+			
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
-
+			//this.getSfas();
+			//console.log(sap.ui.getCore().AppContext.Sfas);
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -102,7 +104,7 @@ sap.ui.define([
 
 		findSfa: function(Sfas, team) {
 			//create stations
-			var stations;
+			var stations = [];
 			stations[16] = ({
 				NR: 16,
 				NumberOfBoxes: 0,
@@ -140,12 +142,12 @@ sap.ui.define([
 				Boxes: []
 			});
 
-			var boxes;
+			var boxes = [];
 			for (var index = 0; index < Sfas.length; ++index) {
 				//add
 				var boxx = Sfas[index];
-				if (boxx.Sfanr.indexOf(team) !== -1) {
-					var boxNr = boxx.Ladetraeger.substring(8);
+				if (boxx.Ladetraeger.indexOf(team) !== -1) {
+					var boxNr = boxx.Ladetraeger.substring(boxx.Ladetraeger.length - 1);
 					boxes[boxNr] = {
 						Id: boxx.Sfanr,
 						Nr: boxNr,
@@ -183,7 +185,6 @@ sap.ui.define([
 
 		onInit: function() {
 			this.weaselId = "AV101";
-			sap.ui.getCore().AppContext.weaselId = "AV101";
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
@@ -213,6 +214,8 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
+
+		
 		sendWeaselToPosition: function(destination) {
 			this.getView().getModel("weasel").read("/SSIUpdatePosRO(Weaselid='" + this.weaselId + "',Destination='" + destination + "')", {
 				success: function() {
@@ -229,6 +232,7 @@ sap.ui.define([
 				async: true
 			});
 		},
+		
 
 		getRoutes: function() {
 			var aFilters = [new Filter({
@@ -361,20 +365,21 @@ sap.ui.define([
 			//fetchFinishedvar route;
 
 			//Helper Functions
-			//decide next lvl 1 station
-			function findLevelTwo() {
-
-			}
-
-			//decide next lvl 2 station
-			function findLevelOne() {
-
-			}
-
 			//decide which boxes to pick
 			function pickBoxes() {
 
 			}
+			//decide next lvl 1 station
+			function findLevelTwo() {
+				pickBoxes();
+			}
+
+			//decide next lvl 2 station
+			function findLevelOne() {
+				pickBoxes();
+			}
+
+		
 
 			//update sorting necessity
 			function updateSorting() {
@@ -408,6 +413,7 @@ sap.ui.define([
 				//TODO sorting stuff
 				findLevelTwo();
 				findLevelOne();
+				updateFinished();
 			}
 			takeToTarget();
 		}
