@@ -16,6 +16,10 @@ sap.ui.define([
 			
 		},
 		
+		testBoxes: function(){
+			
+		},
+		
 		startButtonPressed: function(oEvent)  {
 		
 		},
@@ -25,7 +29,7 @@ sap.ui.define([
 		},
 		
 		validateStartPosButtonPressed: function(oEvent){
-			
+			this.getSfas();
 		},
 		
 		calculateRouteButtonPressed: function(oEvent){
@@ -40,22 +44,98 @@ sap.ui.define([
 			
 		},
 		
+	findSfa: function(Sfas, team) {
+	//create stations
+	var stations = new Array([17]);
+	stations[16] = ({
+		NR: 16,
+		NumberOfBoxes: 0,
+		Level: 0,
+		Boxes: []
+	});
+	stations[13] = ({
+		NR: 13,
+		NumberOfBoxes: 0,
+		Level: 1,
+		Boxes: []
+	});
+	stations[14] = ({
+		NR: 14,
+		NumberOfBoxes: 0,
+		Level: 1,
+		Boxes: []
+	});
+	stations[11] = ({
+		NR: 11,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+	stations[12] = ({
+		NR: 12,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+	stations[15] = ({
+		NR: 15,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+
+	var boxes;
+	for (var index = 0; index < Sfas.length; ++index) {
+		//add
+		var boxx = Sfas[index];
+		if (boxx.Sfanr.indexOf(team) !== -1) {
+			var boxNr = boxx.Ladetraeger.substring(8);
+			boxes[boxNr] = {
+				Id: boxx.Sfanr,
+				Nr: boxNr,
+				Station: boxx.KnotenVon,
+				loaded: 0
+			};
+			stations[boxx.KnotenVon].NumberOfBoxes++;
+			stations[boxx.KnotenVon].Boxes.push(boxNr);
+		}
+
+	}
+	sap.ui.getCore().AppContext.boxes = boxes;
+	sap.ui.getCore().AppContext.stations = stations;
+},
+
+		
 		boxButtonPickPressed: function(oEvent){
-			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			sap.ui.getCore().AppContext.boxes[boxId].loaded = 1;
-			var station = sap.ui.getCore().AppContext.stations.filter(station.NR = boxId);
-			station.NumberOfBoxes--;
 			
-				MessageToast.show("Boxnr.: " + boxId, {
-						duration: 5000
-					});
+			
+			
+					
+			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
+			
+			//var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			//	Nr: 16,
+			//	loaded: 1
+			//};
+			var station = sap.ui.getCore().AppContext.stations[16];
+			
+			if (station.NumberOfBoxes > 0) {
+				station.NumberOfBoxes--;
+			}
+			else{
+				
+			}
+			
+			
 			//sap.ui.getCore().AppContext.stations[]
+			
+			
 		},
 
 		onInit: function() {
 			this.weaselId = "AV101";
 			sap.ui.getCore().AppContext.weaselId = "AV101";
-			this.areal = "wslc1";
+			this.areal = "WSLC1";
 			this.team = 2;
 		},
 

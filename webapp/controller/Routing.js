@@ -2,66 +2,6 @@ sap.ui.getCore().AppContext.boxes = [];
 sap.ui.getCore().AppContext.stations = [];
 
 //parse boxes by team and number and put them ordered into boxes array; sfas entspricht array mit boxen und deren eigenschaften
-sap.ui.getCore().AppContext.findSfa = function(Sfas, team) {
-	//create stations
-	var stations;
-	stations[16] = ({
-		NR: 16,
-		NumberOfBoxes: 0,
-		Level: 0,
-		Boxes: []
-	});
-	stations[13] = ({
-		NR: 13,
-		NumberOfBoxes: 0,
-		Level: 1,
-		Boxes: []
-	});
-	stations[14] = ({
-		NR: 14,
-		NumberOfBoxes: 0,
-		Level: 1,
-		Boxes: []
-	});
-	stations[11] = ({
-		NR: 11,
-		NumberOfBoxes: 0,
-		Level: 2,
-		Boxes: []
-	});
-	stations[12] = ({
-		NR: 12,
-		NumberOfBoxes: 0,
-		Level: 2,
-		Boxes: []
-	});
-	stations[15] = ({
-		NR: 15,
-		NumberOfBoxes: 0,
-		Level: 2,
-		Boxes: []
-	});
-
-	var boxes;
-	for (var index = 0; index < Sfas.length; ++index) {
-		//add
-		var boxx = Sfas[index];
-		if (boxx.Sfanr.indexOf(team) !== -1) {
-			var boxNr = boxx.Ladetraeger.substring(8);
-			boxes[boxNr] = {
-				Id: boxx.Sfanr,
-				Nr: boxNr,
-				Station: boxx.KnotenVon,
-				loaded: 0
-			};
-			stations[boxx.KnotenVon].NumberOfBoxes++;
-			stations[boxx.KnotenVon].Boxes.push(boxNr);
-		}
-
-	}
-	sap.ui.getCore().AppContext.boxes = boxes;
-	sap.ui.getCore().AppContext.stations = stations;
-};
 
 sap.ui.getCore().AppContext.routingFunction = function(start) {
 
