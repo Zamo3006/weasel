@@ -11,19 +11,56 @@ sap.ui.define([
 
 	return Controller.extend("weasel.challenge.controller.StartView", {
 
-
 		startButtonPressed: function(oEvent) {
 			this.startChallenge();
 		},
-
 		stopButtonPressed: function(oEvent) {
 			this.finishChallenge();
 		},
 
+		testBoxes: function() {
+			 this.testBoxes = ({
+				Ladetraeger: "Kiste-21",
+				SfaNr : 7321,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-22",
+				SfaNr : 7322,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-23",
+				SfaNr : 7323,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-24",
+				SfaNr : 7334,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-25",
+				SfaNr : 7325,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-26",
+				SfaNr : 7326,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-27",
+				SfaNr : 7327,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-28",
+				SfaNr : 7328,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-11",
+				SfaNr : 7329,
+				KnotenVon : 13
+			});
+		},
 
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			this.getSfaStatus();
+			this.getSfas();
 			//	this.getWeaselStatus();
 		},
 
@@ -33,16 +70,24 @@ sap.ui.define([
 
 		goToRfidTagButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			if(position > 0 && position < 17){
+			if (position > 0 && position < 17) {
 				this.sendWeaselToPosition(position);
-			}else{
-				MessageToast.show("Invalid waypoint",{duration : 5000});
+			} else {
+				MessageToast.show("Invalid waypoint", {
+					duration: 5000
+				});
 			}
 		},
-		
-		
-		
-		scanButtonPressed: function(oEvent){
+
+		scanBoxBeladenPressed: function(oEvent) {
+
+		},
+
+		scanBoxEntladenPressed: function(oEvent) {
+
+		},
+
+		scanButtonPressed: function(oEvent) {
 			var text = this.byId("BoxText");
 			sap.ndc.BarcodeScanner.scan(
 				function(mResult) {
@@ -50,35 +95,95 @@ sap.ui.define([
 					text.setText("Box: " + sap.ui.getCore().AppContext.scanResult);
 				},
 				function(Error) {
-				 	
+
 				}
 			);
 		},
-		
-		setScanText :function(){
-			
-			this.byId("BoxText").setText( "Box: " + sap.ui.getCore().AppContext.scanResult);
-		},
-		
-		boxButtonPickPressed: function(oControlEvent){
 
-		
-		/*	switch() {
-				case n:
-			        code block
-			        break;
-			    case n:
-			        code block
-			        break;
-			    default:
-			        code block
-			}*/
-			
+		findSfa: function(Sfas, team) {
+			//create stations
+			var stations;
+			stations[16] = ({
+				NR: 16,
+				NumberOfBoxes: 0,
+				Level: 0,
+				Boxes: []
+			});
+			stations[13] = ({
+				NR: 13,
+				NumberOfBoxes: 0,
+				Level: 1,
+				Boxes: []
+			});
+			stations[14] = ({
+				NR: 14,
+				NumberOfBoxes: 0,
+				Level: 1,
+				Boxes: []
+			});
+			stations[11] = ({
+				NR: 11,
+				NumberOfBoxes: 0,
+				Level: 2,
+				Boxes: []
+			});
+			stations[12] = ({
+				NR: 12,
+				NumberOfBoxes: 0,
+				Level: 2,
+				Boxes: []
+			});
+			stations[15] = ({
+				NR: 15,
+				NumberOfBoxes: 0,
+				Level: 2,
+				Boxes: []
+			});
+
+			var boxes;
+			for (var index = 0; index < Sfas.length; ++index) {
+				//add
+				var boxx = Sfas[index];
+				if (boxx.Sfanr.indexOf(team) !== -1) {
+					var boxNr = boxx.Ladetraeger.substring(8);
+					boxes[boxNr] = {
+						Id: boxx.Sfanr,
+						Nr: boxNr,
+						Station: boxx.KnotenVon,
+						loaded: 0
+					};
+					stations[boxx.KnotenVon].NumberOfBoxes++;
+					stations[boxx.KnotenVon].Boxes.push(boxNr);
+				}
+
+			}
+			sap.ui.getCore().AppContext.boxes = boxes;
+			sap.ui.getCore().AppContext.stations = stations;
+		},
+
+		boxButtonPickPressed: function(oEvent) {
+
+			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
+
+			//var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			//	Nr: 16,
+			//	loaded: 1
+			//};
+			var station = sap.ui.getCore().AppContext.stations[16];
+
+			if (station.NumberOfBoxes > 0) {
+				station.NumberOfBoxes--;
+			} else {
+
+			}
+
+			//sap.ui.getCore().AppContext.stations[]
+
 		},
 
 		onInit: function() {
-			this.weaselId = "AV100";
-			sap.ui.getCore().AppContext.weaselId = "AV100";
+			this.weaselId = "AV101";
+			sap.ui.getCore().AppContext.weaselId = "AV101";
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
@@ -95,7 +200,9 @@ sap.ui.define([
 				filters: aFilters,
 				success: function(data) {
 					sap.ui.getCore().AppContext.status = data.results;
-						MessageToast.show("Got Weasel Status",{duration: 5000});
+					MessageToast.show("Got Weasel Status", {
+						duration: 5000
+					});
 				},
 				error: function(e) {
 					MessageToast.show(e, {
@@ -110,7 +217,9 @@ sap.ui.define([
 			this.getView().getModel("weasel").read("/SSIUpdatePosRO(Weaselid='" + this.weaselId + "',Destination='" + destination + "')", {
 				success: function() {
 					sap.ui.getCore().AppContext.nextPosition = destination;
-					MessageToast.show("Send Weasel to "+destination,{duration: 5000});
+					MessageToast.show("Send Weasel to " + destination, {
+						duration: 5000
+					});
 				},
 				error: function(e) {
 					MessageToast.show(e, {
@@ -131,7 +240,9 @@ sap.ui.define([
 				filters: aFilters,
 				success: function(data) {
 					sap.ui.getCore().AppContext.routes = data.results;
-						MessageToast.show("Read Routes",{duration: 5000});
+					MessageToast.show("Read Routes", {
+						duration: 5000
+					});
 				},
 				error: function(e) {
 					MessageToast.show(e, {
@@ -141,7 +252,7 @@ sap.ui.define([
 				async: true
 			}, null, null, true);
 		},
-	
+
 		getSfas: function() {
 			var aFilters = [new Filter({
 				path: "ExternalSystem",
@@ -152,7 +263,9 @@ sap.ui.define([
 				filters: aFilters,
 				success: function(data) {
 					sap.ui.getCore().AppContext.Sfas = data.results;
-						MessageToast.show("Read Sfas",{duration: 5000});
+					MessageToast.show("Read Sfas", {
+						duration: 5000
+					});
 				},
 				error: function(e) {
 					MessageToast.show(e, {
@@ -169,8 +282,7 @@ sap.ui.define([
 					"Sfanr": sfa,
 					"Status": status
 				}, {
-					success: function() {
-					},
+					success: function() {},
 					error: function(e) {
 						MessageToast.show(e, {
 							duration: 5000
@@ -180,9 +292,13 @@ sap.ui.define([
 				}
 			);
 		},
+
+		//sfa für box beladen
 		pickupSfa: function(sfa) {
 			this.setSfaStatus(sfa, "50");
 		},
+
+		//sfa für entalden von box auf ziel
 		setdownSfa: function(sfa) {
 			this.setSfaStatus(sfa, "80");
 		},
@@ -190,20 +306,9 @@ sap.ui.define([
 		startChallenge: function() {
 			this.getView().getModel("weaselChallenge").read("/Start(Areal='" + this.areal + "')", {
 				success: function() {
-					MessageToast.show("Started Challenge",{duration: 5000});
-				},
-				error: function(e) {
-					MessageToast.show(e, {
+					MessageToast.show("Started Challenge", {
 						duration: 5000
 					});
-				},
-				async: true
-			}, null, null, true);
-		},
-		finishChallenge: function() {
-			this.getView().getModel("weaselChallenge").read("/Finish(Areal='" + this.areal + "')", {
-				success: function() {
-					MessageToast.show("Finished Challenge",{duration: 5000});
 				},
 				error: function(e) {
 					MessageToast.show(e, {
@@ -214,6 +319,21 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
+		finishChallenge: function() {
+			this.getView().getModel("weaselChallenge").read("/Finish(Areal='" + this.areal + "')", {
+				success: function() {
+					MessageToast.show("Finished Challenge", {
+						duration: 5000
+					});
+				},
+				error: function(e) {
+					MessageToast.show(e, {
+						duration: 5000
+					});
+				},
+				async: true
+			}, null, null, true);
+		},
 
 		//DO SOMETHING!
 		routingFunction: function(start) {
@@ -283,12 +403,6 @@ sap.ui.define([
 			}
 
 			//routing
-			//find first station depending on start position
-			if (start == 9) {
-				//TODO
-			} else if (start == 10) {
-				//TODO
-			}
 			//loop transport boxes to lvl1 stations
 			while (!fetchFinished) {
 				//TODO sorting stuff

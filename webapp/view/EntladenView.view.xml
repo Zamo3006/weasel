@@ -1,8 +1,5 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="weasel.challenge.controller.StartView"
-	xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:l="sap.ui.layout" 
-	xmlns:f="sap.ui.layout.form" >
-
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="weasel.challenge.controller.StartView">
+	<Text text="Entladen"/>
 	
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
@@ -28,5 +25,5 @@
 		<Button class="BoxButton" id="BoxButton7" text="BOX 7" press="boxButtonUnloadPressed"/>
 		<Button class="BoxButton" id="BoxButton8" text="BOX 8" press="boxButtonUnloadPressed"/>
 	</f:SimpleForm>
-	
+
 </mvc:View>
