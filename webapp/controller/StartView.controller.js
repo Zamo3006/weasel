@@ -19,7 +19,7 @@ sap.ui.define([
 		},
 
 		testBoxes: function() {
-			 this.testBoxes = ({
+			 this.testBoxesArray = [{
 				Ladetraeger: "Kiste-21",
 				SfaNr : 7321,
 				KnotenVon : 13
@@ -55,7 +55,7 @@ sap.ui.define([
 				Ladetraeger: "Kiste-11",
 				SfaNr : 7329,
 				KnotenVon : 13
-			});
+			}];
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
@@ -103,7 +103,7 @@ sap.ui.define([
 		findSfa: function(Sfas, team) {
 			//create stations
 			
-			var stations;
+			var stations = new Array([16]);
 			stations[16] = ({
 				NR: 16,
 				NumberOfBoxes: 0,
@@ -141,12 +141,8 @@ sap.ui.define([
 				Boxes: []
 			});
 			var boxes;
-			for (var index = 0; index < Sfas.length; ++index) {
+				for (var index = 0; index < Sfas.length; ++index) {
 				//add
-				
-					MessageToast.show("Number of Sfas: " + Sfas.length, {
-						duration: 5000
-					});
 				
 				var boxx = Sfas[index];
 				if (boxx.Sfanr.indexOf(team) !== -1) {
@@ -162,32 +158,38 @@ sap.ui.define([
 				}
 
 			}
+			
+			
 			sap.ui.getCore().AppContext.boxes = boxes;
 			sap.ui.getCore().AppContext.stations = stations;
 		},
 
 		loadBox: function(oEvent) {
-
-			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
-
+			this.testBoxes();
+			this.findSfa(this.testBoxesArray, "Kiste-2");
+			console.log(sap.ui.getCore().AppContext.stations);
+			console.log(sap.ui.getCore().AppContext.boxes);
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			//	Nr: 16,
-			//	loaded: 1
-			//};
+		
+			function getActualBox(box){
+				return box.Ladetraeger.charAt(box.Ladetraeger.length - 1) == boxId;
+			}
+			var box = sap.ui.getCore().AppContext.boxes.find(getActualBox);
 			
-			//var box = boxes[boxId];
-			
-			//var station = stations[16];
+			var station = sap.ui.getCore().AppContext.stations[box.KnotenVon];
 
-			//if (station.NumberOfBoxes > 0) {
-			//	station.NumberOfBoxes--;
-			//} else {
-
-			//}
-			
-				MessageToast.show("Load Box: " + boxId, {
+			if (station.NumberOfBoxes > 0) {
+				station.NumberOfBoxes--;	
+				station.Boxes.splice(boxId);
+				console.log(station.NumberOfBoxes);
+				console.log( sap.ui.getCore().AppContext.stations);
+			} else {
+				MessageToast.show("No box on station " + station.NR, {
 						duration: 5000
 					});
+			}
+			
+			
 			
 			//sap.ui.getCore().AppContext.stations[]
 
