@@ -19,55 +19,87 @@ sap.ui.define([
 		},
 
 		testBoxes: function() {
-			 this.testBoxesArray = [{
+			this.testBoxesArray = [{
 				Ladetraeger: "Kiste-21",
-				Sfanr : 7321,
-				KnotenVon : 13
+				Sfanr: 7321,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-22",
-				Sfanr : 7322,
-				KnotenVon : 13
+				Sfanr: 7322,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-23",
-				Sfanr : 7323,
-				KnotenVon : 13
+				Sfanr: 7323,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-24",
-				Sfanr : 7334,
-				KnotenVon : 13
+				Sfanr: 7334,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-25",
-				Sfanr : 7325,
-				KnotenVon : 13
+				Sfanr: 7325,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-26",
-				Sfanr : 7326,
-				KnotenVon : 13
+				Sfanr: 7326,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-27",
-				Sfanr : 7327,
-				KnotenVon : 13
+				Sfanr: 7327,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-28",
-				Sfanr : 7328,
-				KnotenVon : 13
+				Sfanr: 7328,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-11",
-				Sfanr : 7329,
-				KnotenVon : 13
+				Sfanr: 7329,
+				KnotenVon: 13
 			}];
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
 			//var position = this.byId("RfidTagInput").getValue();
 			//this.getSfas();
-		//	this.writeWeaselStatus();
-			
+			//	this.writeWeaselStatus();
+			var position = this.byId("RfidTagInput").getValue();
+			this.getView().getModel("test").create(
+				"Customer", {
+					"Kdnr": position,
+					"Ort": "not"
+				}, null, {
+					success: function() {
+						MessageToast.show("wrote stuff", {
+							duration: 5000
+						});
+					},
+					error: function(e) {
+						MessageToast.show(e, {
+							duration: 5000
+						});
+					},
+					async: true
+				}
+			);
+
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
 			//this.getSfas();
 			//console.log(sap.ui.getCore().AppContext.Sfas);
+			this.getView().getModel("test").read("/Customer", {
+				success: function(data) {
+					MessageToast.show("read stuff", {
+						duration: 5000
+					});
+				},
+				error: function(e) {
+					MessageToast.show(e, {
+						duration: 5000
+					});
+				},
+				async: true
+			}, null, null, true);
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -214,8 +246,6 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
-
-		
 		sendWeaselToPosition: function(destination) {
 			this.getView().getModel("weasel").read("/SSIUpdatePosRO(Weaselid='" + this.weaselId + "',Destination='" + destination + "')", {
 				success: function() {
@@ -232,7 +262,6 @@ sap.ui.define([
 				async: true
 			});
 		},
-		
 
 		getRoutes: function() {
 			var aFilters = [new Filter({
@@ -378,8 +407,6 @@ sap.ui.define([
 			function findLevelOne() {
 				pickBoxes();
 			}
-
-		
 
 			//update sorting necessity
 			function updateSorting() {
