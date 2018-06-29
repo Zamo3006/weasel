@@ -60,10 +60,27 @@ sap.ui.define([
 
 		calculateRouteButtonPressed: function(oEvent) {
 			//var position = this.byId("RfidTagInput").getValue();
-			this.getSfas();
-			this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
-			console.log(sap.ui.getCore().AppContext.boxes);
+			//this.getSfas();
 			//	this.writeWeaselStatus();
+			var position = this.byId("RfidTagInput").getValue();
+			this.getView().getModel("test").create(
+				"Customer", {
+					"Kdnr": position,
+					"Ort": "not"
+				}, null, {
+					success: function() {
+						MessageToast.show("wrote stuff", {
+							duration: 5000
+						});
+					},
+					error: function(e) {
+						MessageToast.show(e, {
+							duration: 5000
+						});
+					},
+					async: true
+				}
+			);
 
 		},
 
@@ -71,6 +88,19 @@ sap.ui.define([
 			//this.getSfas();
 			this.setSfas();
 			//console.log(sap.ui.getCore().AppContext.Sfas);
+			this.getView().getModel("test").read("/Customer", {
+				success: function(data) {
+					MessageToast.show("read stuff", {
+						duration: 5000
+					});
+				},
+				error: function(e) {
+					MessageToast.show(e, {
+						duration: 5000
+					});
+				},
+				async: true
+			}, null, null, true);
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -391,6 +421,8 @@ sap.ui.define([
 			function isLevelOne(station) {
 				return station.Level == 1;
 			}
+
+
 			//update sorting necessity
 			function updateSorting() {
 				if (unevenLvlTwos > 0) {
