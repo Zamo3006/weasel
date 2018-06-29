@@ -8,12 +8,11 @@
 	displayBlock="true" >
 	<App>
 		<pages>
-			<Page title="{i18n>title}">
+			<Page title="{i18n>title}" showHeader="false">
 				<IconTabBar
 					id="tab_id"
 					expanded="{device>/isNoPhone}"
 					class="sapUiResponsiveContentPadding"
-					
 					expandable = "false">
 					<items>
 						<IconTabFilter
@@ -21,6 +20,12 @@
 							text="Start">
 							<mvc:XMLView viewName="weasel.challenge.view.StartView"/>
 							
+						</IconTabFilter>
+						<IconTabFilter
+							key="Scan"
+							text="Scan">
+							<mvc:XMLView viewName="weasel.challenge.view.ScanView"/>
+						
 						</IconTabFilter>
 						<IconTabFilter
 							key="Beladen"

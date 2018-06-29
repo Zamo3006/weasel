@@ -2,9 +2,10 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
+	"sap/ndc/BarcodeScanner",
 
 	"sap/m/MessageToast"
-], function(Controller, Filter, FilterOperator,
+], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
 	"use strict";
 
@@ -37,6 +38,42 @@ sap.ui.define([
 			}else{
 				MessageToast.show("Invalid waypoint",{duration : 5000});
 			}
+		},
+		
+		
+		
+		scanButtonPressed: function(oEvent){
+			var text = this.byId("BoxText");
+			sap.ndc.BarcodeScanner.scan(
+				function(mResult) {
+					sap.ui.getCore().AppContext.scanResult = mResult.text;
+					text.setText("Box: " + sap.ui.getCore().AppContext.scanResult);
+				},
+				function(Error) {
+				 	
+				}
+			);
+		},
+		
+		setScanText :function(){
+			
+			this.byId("BoxText").setText( "Box: " + sap.ui.getCore().AppContext.scanResult);
+		},
+		
+		boxButtonPickPressed: function(oControlEvent){
+
+		
+		/*	switch() {
+				case n:
+			        code block
+			        break;
+			    case n:
+			        code block
+			        break;
+			    default:
+			        code block
+			}*/
+			
 		},
 
 		onInit: function() {
