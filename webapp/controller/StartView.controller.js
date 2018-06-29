@@ -22,7 +22,7 @@ sap.ui.define([
 
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			this.getSfaStatus();
+			this.getSfas();
 			//	this.getWeaselStatus();
 		},
 
@@ -40,8 +40,8 @@ sap.ui.define([
 		},
 
 		onInit: function() {
-			this.weaselId = "AV100";
-			sap.ui.getCore().AppContext.weaselId = "AV100";
+			this.weaselId = "AV101";
+			sap.ui.getCore().AppContext.weaselId = "AV101";
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
@@ -115,6 +115,7 @@ sap.ui.define([
 				filters: aFilters,
 				success: function(data) {
 					sap.ui.getCore().AppContext.Sfas = data.results;
+					console.log(data.results);
 						MessageToast.show("Read Sfas",{duration: 5000});
 				},
 				error: function(e) {
