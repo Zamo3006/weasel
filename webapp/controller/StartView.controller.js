@@ -17,6 +17,7 @@ sap.ui.define([
 		},
 		stopButtonPressed: function(oEvent) {
 			this.finishChallenge();
+		},
 		
 		testBoxes: function(){
 			
