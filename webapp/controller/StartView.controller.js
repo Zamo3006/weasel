@@ -15,9 +15,11 @@ sap.ui.define([
 		startButtonPressed: function(oEvent) {
 			this.startChallenge();
 		},
-
 		stopButtonPressed: function(oEvent) {
 			this.finishChallenge();
+		
+		testBoxes: function(){
+			
 		},
 
 
@@ -38,6 +40,9 @@ sap.ui.define([
 			}else{
 				MessageToast.show("Invalid waypoint",{duration : 5000});
 			}
+		
+		validateStartPosButtonPressed: function(oEvent){
+			this.getSfas();
 		},
 		
 		
@@ -75,6 +80,94 @@ sap.ui.define([
 			}*/
 			
 		},
+		
+	findSfa: function(Sfas, team) {
+	//create stations
+	var stations = new Array([17]);
+	stations[16] = ({
+		NR: 16,
+		NumberOfBoxes: 0,
+		Level: 0,
+		Boxes: []
+	});
+	stations[13] = ({
+		NR: 13,
+		NumberOfBoxes: 0,
+		Level: 1,
+		Boxes: []
+	});
+	stations[14] = ({
+		NR: 14,
+		NumberOfBoxes: 0,
+		Level: 1,
+		Boxes: []
+	});
+	stations[11] = ({
+		NR: 11,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+	stations[12] = ({
+		NR: 12,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+	stations[15] = ({
+		NR: 15,
+		NumberOfBoxes: 0,
+		Level: 2,
+		Boxes: []
+	});
+
+	var boxes;
+	for (var index = 0; index < Sfas.length; ++index) {
+		//add
+		var boxx = Sfas[index];
+		if (boxx.Sfanr.indexOf(team) !== -1) {
+			var boxNr = boxx.Ladetraeger.substring(8);
+			boxes[boxNr] = {
+				Id: boxx.Sfanr,
+				Nr: boxNr,
+				Station: boxx.KnotenVon,
+				loaded: 0
+			};
+			stations[boxx.KnotenVon].NumberOfBoxes++;
+			stations[boxx.KnotenVon].Boxes.push(boxNr);
+		}
+
+	}
+	sap.ui.getCore().AppContext.boxes = boxes;
+	sap.ui.getCore().AppContext.stations = stations;
+},
+
+		
+		boxButtonPickPressed: function(oEvent){
+			
+			
+			
+					
+			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
+			
+			//var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			//	Nr: 16,
+			//	loaded: 1
+			//};
+			var station = sap.ui.getCore().AppContext.stations[16];
+			
+			if (station.NumberOfBoxes > 0) {
+				station.NumberOfBoxes--;
+			}
+			else{
+				
+			}
+			
+			
+			//sap.ui.getCore().AppContext.stations[]
+			
+			
+		},
 
 		onInit: function() {
 			this.weaselId = "AV100";
@@ -105,7 +198,7 @@ sap.ui.define([
 				async: true
 			}, null, null, true);
 		},
-
+      
 		sendWeaselToPosition: function(destination) {
 			this.getView().getModel("weasel").read("/SSIUpdatePosRO(Weaselid='" + this.weaselId + "',Destination='" + destination + "')", {
 				success: function() {
@@ -162,7 +255,7 @@ sap.ui.define([
 				async: true
 			}, null, null, true);
 		},
-
+      
 		setSfaStatus: function(sfa, status) {
 			this.getView().getModel("challenge").update(
 				"/SfaStatus(Sfanr='" + sfa + "')", {
@@ -180,9 +273,13 @@ sap.ui.define([
 				}
 			);
 		},
+		
+		//sfa für box beladen
 		pickupSfa: function(sfa) {
 			this.setSfaStatus(sfa, "50");
 		},
+		
+		//sfa für entalden von box auf ziel
 		setdownSfa: function(sfa) {
 			this.setSfaStatus(sfa, "80");
 		},
