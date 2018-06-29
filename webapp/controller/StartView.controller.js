@@ -121,7 +121,7 @@ sap.ui.define([
 			sap.ui.getCore().AppContext.stations = stations;
 		},
 
-		boxButtonPickPressed: function(oEvent) {
+		actionOnBox: function(oEvent) {
 
 			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
 
@@ -131,12 +131,16 @@ sap.ui.define([
 			//};
 			var station = sap.ui.getCore().AppContext.stations[16];
 
-			if (station.NumberOfBoxes > 0) {
-				station.NumberOfBoxes--;
-			} else {
+			//if (station.NumberOfBoxes > 0) {
+			//	station.NumberOfBoxes--;
+			//} else {
 
-			}
-
+			//}
+			
+				MessageToast.show(oEvent, {
+						duration: 5000
+					});
+			
 			//sap.ui.getCore().AppContext.stations[]
 
 		},
