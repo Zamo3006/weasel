@@ -2,7 +2,7 @@
   "run": [
     {
       "filePath": "/webapp/index.html",
-      "previewMode": 1,
+      "previewMode": 0,
       "dataMode": 1,
       "workspace": "withoutWorkspace",
       "ui5ActiveVersion": null,
@@ -12,15 +12,15 @@
       "hashParameter": "",
       "backendSystem": [],
       "_metadata": {
-        "runnerId": "webapprunner",
         "id": 1895321,
+        "runnerId": "webapprunner",
         "displayName": "Run index.html 1",
-        "lastRunTimeStamp": 1530197841519
+        "lastRunTimeStamp": 1530189090568
       }
     },
     {
       "filePath": "/weasel.challenge/webapp/index.html",
-      "previewMode": 1,
+      "previewMode": 0,
       "dataMode": 1,
       "workspace": "withoutWorkspace",
       "ui5ActiveVersion": null,
@@ -32,7 +32,7 @@
       "_metadata": {
         "id": 5566778,
         "runnerId": "webapprunner",
-        "displayName": "Run index.html",
+        "displayName": "run with frame",
         "lastRunTimeStamp": 1523430295501
       }
     }

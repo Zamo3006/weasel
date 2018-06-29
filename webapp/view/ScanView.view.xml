@@ -1,0 +1,17 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="weasel.challenge.controller.StartView"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:l="sap.ui.layout" 
+	xmlns:f="sap.ui.layout.form" >
+	
+	<f:SimpleForm editable="true"> 
+	<f:content class="ScanContent">
+			<Button class="ScanButton" id="ScanButton" text="Scan" press="scanButtonPressed"/>
+			<Text id="BoxText" text = "Box: "></Text>
+			<Button class="ScanBeladenButton" id="ScanBeladenButton" text="Beladen" press="scanBoxBeladenPressed"/>
+			<Button class="ScanEntladenButton" id="ScanEntladenButton" text="Entladen" press="scanBoxEntladenPressed"/>
+			
+	</f:content>
+		
+</f:SimpleForm>
+	
+</mvc:View>

@@ -1,24 +1,29 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="weasel.challenge.controller.StartView">
 	<Text text="Entladen"/>
 	
-	<f:SimpleForm editable="true"> 
-	<l:VerticalLayout class="BoxesButtonsContent">
-			<Button class="BoxButton1" id="BoxButton1" text="BOX 1" press="boxButtonUnloadPressed"/>
-			<Button class="BoxButton2" id="BoxButton2" text="BOX 2" press="boxButtonUnloadPressed"/>
-			
-			<!--
-			<Button class="BoxButton3" id="BoxButton3" text="BOX 3" press="boxButtonUnloadPressed"/>
-			<Button class="BoxButton4" id="BoxButton4" text="BOX 4" press="boxButtonUnloadPressed"/>
-			<Button class="BoxButton5" id="BoxButton5" text="BOX 5" press="boxButtonUnloadPressed"/>
-			<Button class="BoxButton6" id="BoxButton6" text="BOX 6" press="boxButtonUnloadPressed"/>
-			<Button class="BodButton7" id="BoxButton7" text="BOX 7" press="boxButtonUnloadPressed"/>
-			<Button class="BoxButton8" id="BoxButton8" text="BOX 8" press="boxButtonUnloadPressed"/>
-			
-		-->
-	<l:content>
-	    <core:ComponentContainer width="100%" id="__container1"/>
-	</l:content>
-	</l:VerticalLayout>
-</f:SimpleForm>
-	
+	<f:SimpleForm 
+	class="BoxesButtonsContent"
+	id="BoxesButtonsContent1">
+		<Button class="BoxButton" id="BoxButton1" text="BOX 1" press="boxButtonUnloadPressed"/>
+		<Button class="BoxButton" id="BoxButton2" text="BOX 2" press="boxButtonUnloadPressed"/>
+	</f:SimpleForm>
+	<f:SimpleForm 
+	class="BoxesButtonsContent"
+	id="BoxesButtonsContent2">
+		<Button class="BoxButton" id="BoxButton3" text="BOX 3" press="boxButtonUnloadPressed"/>
+		<Button class="BoxButton" id="BoxButton4" text="BOX 4" press="boxButtonUnloadPressed"/>
+	</f:SimpleForm>
+	<f:SimpleForm 
+	class="BoxesButtonsContent"
+	id="BoxesButtonsContent3">
+		<Button class="BoxButton" id="BoxButton5" text="BOX 5" press="boxButtonUnloadPressed"/>
+		<Button class="BoxButton" id="BoxButton6" text="BOX 6" press="boxButtonUnloadPressed"/>
+	</f:SimpleForm>
+	<f:SimpleForm 
+	class="BoxesButtonsContent"
+	id="BoxesButtonsContent4">
+		<Button class="BoxButton" id="BoxButton7" text="BOX 7" press="boxButtonUnloadPressed"/>
+		<Button class="BoxButton" id="BoxButton8" text="BOX 8" press="boxButtonUnloadPressed"/>
+	</f:SimpleForm>
+
 </mvc:View>
