@@ -104,12 +104,7 @@ sap.ui.define([
 
 		findSfa: function(Sfas, team) {
 			//create stations
-<<<<<<< HEAD
-			
-			var stations = new Array([16]);
-=======
 			var stations = [];
->>>>>>> branch 'master' of https://github.com/Zamo3006/weasel.git
 			stations[16] = ({
 				NR: 16,
 				NumberOfBoxes: 0,
@@ -146,14 +141,9 @@ sap.ui.define([
 				Level: 2,
 				Boxes: []
 			});
-<<<<<<< HEAD
-			var boxes;
-				for (var index = 0; index < Sfas.length; ++index) {
-=======
 
 			var boxes = [];
 			for (var index = 0; index < Sfas.length; ++index) {
->>>>>>> branch 'master' of https://github.com/Zamo3006/weasel.git
 				//add
 				
 				var boxx = Sfas[index];
