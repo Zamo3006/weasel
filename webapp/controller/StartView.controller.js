@@ -8,7 +8,8 @@ sap.ui.define([
 ], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
 	"use strict";
-
+	var stations = new Array([17]);
+	var boxes;
 	return Controller.extend("weasel.challenge.controller.StartView", {
 
 		startButtonPressed: function(oEvent) {
@@ -62,7 +63,7 @@ sap.ui.define([
 
 		findSfa: function(Sfas, team) {
 			//create stations
-			var stations = new Array([17]);
+			
 			stations[16] = ({
 				NR: 16,
 				NumberOfBoxes: 0,
@@ -100,9 +101,13 @@ sap.ui.define([
 				Boxes: []
 			});
 
-			var boxes;
 			for (var index = 0; index < Sfas.length; ++index) {
 				//add
+				
+					MessageToast.show("Number of Sfas: " + Sfas.length, {
+						duration: 5000
+					});
+				
 				var boxx = Sfas[index];
 				if (boxx.Sfanr.indexOf(team) !== -1) {
 					var boxNr = boxx.Ladetraeger.substring(8);
@@ -121,11 +126,38 @@ sap.ui.define([
 			sap.ui.getCore().AppContext.stations = stations;
 		},
 
-		actionOnBox: function(oEvent) {
+		loadBox: function(oEvent) {
 
 			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
 
-			//var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			//	Nr: 16,
+			//	loaded: 1
+			//};
+			
+			var box = boxes[boxId];
+			
+			var station = stations[16];
+
+			//if (station.NumberOfBoxes > 0) {
+			//	station.NumberOfBoxes--;
+			//} else {
+
+			//}
+			
+				MessageToast.show("Load Box: " + boxId, {
+						duration: 5000
+					});
+			
+			//sap.ui.getCore().AppContext.stations[]
+
+		},
+		
+		unloadBox: function(oEvent) {
+
+			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
+
+			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 			//	Nr: 16,
 			//	loaded: 1
 			//};
@@ -137,14 +169,14 @@ sap.ui.define([
 
 			//}
 			
-				MessageToast.show(oEvent, {
+				MessageToast.show("Unload Box: " + boxId, {
 						duration: 5000
 					});
 			
 			//sap.ui.getCore().AppContext.stations[]
 
 		},
-
+		
 		onInit: function() {
 			this.weaselId = "AV101";
 			sap.ui.getCore().AppContext.weaselId = "AV101";

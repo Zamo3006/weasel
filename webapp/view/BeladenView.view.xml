@@ -6,26 +6,26 @@
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent01">
-		<Button class="BoxButton" id="l01" text="BOX 1" press="actionOnBox"/>
-		<Button class="BoxButton" id="l02" text="BOX 2" press="actionOnBox"/>
+		<Button class="BoxButton" id="l01" text="BOX 1" press="loadBox"/>
+		<Button class="BoxButton" id="l02" text="BOX 2" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent02">
-		<Button class="BoxButton" id="l3" text="BOX 3" press="actionOnBox"/>
-		<Button class="BoxButton" id="l4" text="BOX 4" press="actionOnBox"/>
+		<Button class="BoxButton" id="l3" text="BOX 3" press="loadBox"/>
+		<Button class="BoxButton" id="l4" text="BOX 4" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent03">
-		<Button class="BoxButton" id="l5" text="BOX 5" press="actionOnBox"/>
-		<Button class="BoxButton" id="l6" text="BOX 6" press="actionOnBox"/>
+		<Button class="BoxButton" id="l5" text="BOX 5" press="loadBox"/>
+		<Button class="BoxButton" id="l6" text="BOX 6" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent04">
-		<Button class="BoxButton" id="l7" text="BOX 7" press="actionOnBox"/>
-		<Button class="BoxButton" id="l8" text="BOX 8" press="actionOnBox"/>
+		<Button class="BoxButton" id="l7" text="BOX 7" press="loadBox"/>
+		<Button class="BoxButton" id="l8" text="BOX 8" press="loadBox"/>
 	</f:SimpleForm>
 	
 </mvc:View>
