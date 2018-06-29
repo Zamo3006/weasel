@@ -8,8 +8,7 @@ sap.ui.define([
 ], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
 	"use strict";
-	var stations = new Array([17]);
-	var boxes;
+	
 	return Controller.extend("weasel.challenge.controller.StartView", {
 
 		startButtonPressed: function(oEvent) {
@@ -20,7 +19,43 @@ sap.ui.define([
 		},
 
 		testBoxes: function() {
-
+			 this.testBoxes = ({
+				Ladetraeger: "Kiste-21",
+				SfaNr : 7321,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-22",
+				SfaNr : 7322,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-23",
+				SfaNr : 7323,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-24",
+				SfaNr : 7334,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-25",
+				SfaNr : 7325,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-26",
+				SfaNr : 7326,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-27",
+				SfaNr : 7327,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-28",
+				SfaNr : 7328,
+				KnotenVon : 13
+			}, {
+				Ladetraeger: "Kiste-11",
+				SfaNr : 7329,
+				KnotenVon : 13
+			});
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
@@ -44,8 +79,12 @@ sap.ui.define([
 			}
 		},
 
-		validateStartPosButtonPressed: function(oEvent) {
-			this.getSfas();
+		scanBoxBeladenPressed: function(oEvent) {
+
+		},
+
+		scanBoxEntladenPressed: function(oEvent) {
+
 		},
 
 		scanButtonPressed: function(oEvent) {
@@ -64,6 +103,7 @@ sap.ui.define([
 		findSfa: function(Sfas, team) {
 			//create stations
 			
+			var stations;
 			stations[16] = ({
 				NR: 16,
 				NumberOfBoxes: 0,
@@ -100,7 +140,7 @@ sap.ui.define([
 				Level: 2,
 				Boxes: []
 			});
-
+			var boxes;
 			for (var index = 0; index < Sfas.length; ++index) {
 				//add
 				
@@ -135,9 +175,9 @@ sap.ui.define([
 			//	loaded: 1
 			//};
 			
-			var box = boxes[boxId];
+			//var box = boxes[boxId];
 			
-			var station = stations[16];
+			//var station = stations[16];
 
 			//if (station.NumberOfBoxes > 0) {
 			//	station.NumberOfBoxes--;
@@ -399,12 +439,6 @@ sap.ui.define([
 			}
 
 			//routing
-			//find first station depending on start position
-			if (start == 9) {
-				//TODO
-			} else if (start == 10) {
-				//TODO
-			}
 			//loop transport boxes to lvl1 stations
 			while (!fetchFinished) {
 				//TODO sorting stuff
