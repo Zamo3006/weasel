@@ -4,6 +4,7 @@
 	xmlns:f="sap.ui.layout.form" >
 
 	
+
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent1">
@@ -28,5 +29,5 @@
 		<Button class="BoxButton" id="BoxButton7" text="BOX 7" press="boxButtonUnloadPressed"/>
 		<Button class="BoxButton" id="BoxButton8" text="BOX 8" press="boxButtonUnloadPressed"/>
 	</f:SimpleForm>
-	
+
 </mvc:View>
