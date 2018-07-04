@@ -59,14 +59,12 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-<<<<<<< HEAD
 			//var position = this.byId("RfidTagInput").getValue();
 			//this.getSfas();
 		//	this.writeWeaselStatus();
 				this.testBoxes();
 			console.log(sap.ui.getCore().AppContext.stations);
 			this.findSfa(this.testBoxesArray, "Kiste-2");
-=======
 			var position = this.byId("RfidTagInput").getValue();
 			this.getView().getModel("test").create(
 				"Customer(Kdnr='"+position+"')", {
@@ -85,8 +83,6 @@ sap.ui.define([
 					async: true
 				}
 			);
-
->>>>>>> branch 'master' of https://github.com/Zamo3006/weasel.git
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
@@ -260,7 +256,8 @@ sap.ui.define([
 						var station = sap.ui.getCore().AppContext.stations[box.Station];
 			console.log(station);
 			if (station.Boxes.includes(box) === false) {
-				station.NumberOfBoxes++;	
+				station.NumberOfBoxes++;
+				console.log(this.byId("RfidTagInput").getValue());
 				station.Boxes.push(boxId);
 				console.log(sap.ui.getCore().AppContext.stations);
 				console.log(sap.ui.getCore().AppContext.boxes);
@@ -541,7 +538,7 @@ sap.ui.define([
 							currentStation = next;
 						}else{
 							route.push({Typ: "drive", Nr: 16});
-							rout.pus({Typ: "unload", Nr: currentBoxes.pop().boxNr})
+							route.pus({Typ: "unload", Nr: currentBoxes.pop().boxNr});
 						}
 					}
 					route.push({Typ: "load", Nr: i});
