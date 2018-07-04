@@ -62,7 +62,9 @@ sap.ui.define([
 			//var position = this.byId("RfidTagInput").getValue();
 			//this.getSfas();
 		//	this.writeWeaselStatus();
-			
+				this.testBoxes();
+			console.log(sap.ui.getCore().AppContext.stations);
+			this.findSfa(this.testBoxesArray, "Kiste-2");
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
@@ -157,6 +159,7 @@ sap.ui.define([
 					};
 					stations[boxx.KnotenVon].NumberOfBoxes++;
 					stations[boxx.KnotenVon].Boxes.push(boxNr);
+					
 				}
 
 			}
@@ -164,60 +167,88 @@ sap.ui.define([
 			
 			sap.ui.getCore().AppContext.boxes = boxes;
 			sap.ui.getCore().AppContext.stations = stations;
+			console.log(sap.ui.getCore().AppContext.stations);
+			console.log(sap.ui.getCore().AppContext.boxes);
 		},
 
 		loadBox: function(oEvent) {
-			this.testBoxes();
-			this.findSfa(this.testBoxesArray, "Kiste-2");
-			console.log(sap.ui.getCore().AppContext.stations);
-			console.log(sap.ui.getCore().AppContext.boxes);
+			
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 		
-			function getActualBox(box){
-				return box.Ladetraeger.charAt(box.Ladetraeger.length - 1) == boxId;
-			}
-			var box = sap.ui.getCore().AppContext.boxes.find(getActualBox);
+			//function getActualBox(box){
+			//	return box.Nr == boxId;
+			//}
 			
-			var station = sap.ui.getCore().AppContext.stations[box.KnotenVon];
-
+				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
+					var box = sap.ui.getCore().AppContext.boxes[boxId];
+					if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined){
+						var station = sap.ui.getCore().AppContext.stations[box.Station];
+			console.log(station);
 			if (station.NumberOfBoxes > 0) {
 				station.NumberOfBoxes--;	
-				station.Boxes.splice(boxId);
-				console.log(station.NumberOfBoxes);
-				console.log( sap.ui.getCore().AppContext.stations);
+				station.Boxes.splice(boxId - 1, 1);
+				console.log(sap.ui.getCore().AppContext.stations);
+				console.log(sap.ui.getCore().AppContext.boxes);
+				
 			} else {
-				MessageToast.show("No box on station " + station.NR, {
+				MessageToast.show("Station " + station.NR + "does not contain a box with index " + boxId + ".", {
 						duration: 5000
 					});
 			}
-			
-			
-			
-			//sap.ui.getCore().AppContext.stations[]
-
+					}
+					else{
+							MessageToast.show("No box with index " + boxId + " found.", {
+						duration: 5000
+					});
+					}
+				}
+				else{
+					MessageToast.show("No box with index " + boxId + " found.", {
+						duration: 5000
+					});
+					
+				}
+			box.loaded = 1;
 		},
 		
 		unloadBox: function(oEvent) {
 
-			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
-
-			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			//	Nr: 16,
-			//	loaded: 1
-			//};
-			var station = sap.ui.getCore().AppContext.stations[16];
-
-			//if (station.NumberOfBoxes > 0) {
-			//	station.NumberOfBoxes--;
-			//} else {
-
+						var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+		
+			//function getActualBox(box){
+			//	return box.Nr == boxId;
 			//}
 			
-				MessageToast.show("Unload Box: " + boxId, {
+				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
+					var box = sap.ui.getCore().AppContext.boxes[boxId];
+					if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined){
+						var station = sap.ui.getCore().AppContext.stations[box.Station];
+			console.log(station);
+			if (station.Boxes.includes(box) === false) {
+				station.NumberOfBoxes++;	
+				station.Boxes.push(boxId);
+				console.log(sap.ui.getCore().AppContext.stations);
+				console.log(sap.ui.getCore().AppContext.boxes);
+				
+			} else {
+				MessageToast.show("Box " + boxId + " is already on station " + station.NR + ".", {
 						duration: 5000
 					});
-			
-			//sap.ui.getCore().AppContext.stations[]
+			}
+					}
+					else{
+							MessageToast.show("No box with index " + boxId + " found on station" + station.NR + ".", {
+						duration: 5000
+					});
+					}
+				}
+				else{
+					MessageToast.show("No box with index " + boxId + " found.", {
+						duration: 5000
+					});
+					
+				}
+			box.loaded = 0;
 
 		},
 		
