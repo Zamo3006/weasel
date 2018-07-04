@@ -19,55 +19,90 @@ sap.ui.define([
 		},
 
 		testBoxes: function() {
-			 this.testBoxesArray = [{
+			this.testBoxesArray = [{
 				Ladetraeger: "Kiste-21",
-				Sfanr : 7321,
-				KnotenVon : 13
+				Sfanr: 7321,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-22",
-				Sfanr : 7322,
-				KnotenVon : 13
+				Sfanr: 7322,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-23",
-				Sfanr : 7323,
-				KnotenVon : 13
+				Sfanr: 7323,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-24",
-				Sfanr : 7334,
-				KnotenVon : 13
+				Sfanr: 7334,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-25",
-				Sfanr : 7325,
-				KnotenVon : 13
+				Sfanr: 7325,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-26",
-				Sfanr : 7326,
-				KnotenVon : 13
+				Sfanr: 7326,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-27",
-				Sfanr : 7327,
-				KnotenVon : 13
+				Sfanr: 7327,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-28",
-				Sfanr : 7328,
-				KnotenVon : 13
+				Sfanr: 7328,
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-11",
-				Sfanr : 7329,
-				KnotenVon : 13
+				Sfanr: 7329,
+				KnotenVon: 13
 			}];
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
+<<<<<<< HEAD
 			//var position = this.byId("RfidTagInput").getValue();
 			//this.getSfas();
 		//	this.writeWeaselStatus();
 				this.testBoxes();
 			console.log(sap.ui.getCore().AppContext.stations);
 			this.findSfa(this.testBoxesArray, "Kiste-2");
+=======
+			var position = this.byId("RfidTagInput").getValue();
+			this.getView().getModel("test").create(
+				"Customer(Kdnr='"+position+"')", {
+					"Hinweis": "two"
+				},  {
+					success: function() {
+						MessageToast.show("wrote stuff", {
+							duration: 5000
+						});
+					},
+					error: function(e) {
+						MessageToast.show(e, {
+							duration: 5000
+						});
+					},
+					async: true
+				}
+			);
+
+>>>>>>> branch 'master' of https://github.com/Zamo3006/weasel.git
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
+			this.getView().getModel("test").read("/Customer", {
+				success: function(data) {
+					MessageToast.show("read stuff", {
+						duration: 5000
+					});
+				},
+				error: function(e) {
+					MessageToast.show(e, {
+						duration: 5000
+					});
+				},
+				async: true
+			}, null, null, true);
 			//this.getSfas();
 			//console.log(sap.ui.getCore().AppContext.Sfas);
 		},
@@ -283,8 +318,6 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
-
-		
 		sendWeaselToPosition: function(destination) {
 			this.getView().getModel("weasel").read("/SSIUpdatePosRO(Weaselid='" + this.weaselId + "',Destination='" + destination + "')", {
 				success: function() {
@@ -301,7 +334,6 @@ sap.ui.define([
 				async: true
 			});
 		},
-		
 
 		getRoutes: function() {
 			var aFilters = [new Filter({
@@ -345,9 +377,11 @@ sap.ui.define([
 						duration: 5000
 					});
 				},
-				async: true
+				async: false
 			}, null, null, true);
 		},
+
+		
 
 		setSfaStatus: function(sfa, status) {
 			this.getView().getModel("challenge").update(
@@ -412,9 +446,9 @@ sap.ui.define([
 		routingFunction: function(start) {
 
 			//boxes {nr, station, lvl, loaded}
-			var boxes = sap.ui.getCore().AppContext.boxes;
+			var boxes;
 			//station {nr, Boxes, #Boxes, Lvl)
-			var stations = sap.ui.getCore().AppContext.stations;
+			var stations;
 			//need for sorting in LvL1
 			var sortingNecessary = 0;
 			//sorting possible while fetching
@@ -428,27 +462,26 @@ sap.ui.define([
 			//# of lvl2 stations with uneven # of boxes
 			var unevenLvlTwos;
 			//currently loaded boxes
-			var currentBoxes;
+			var currentBoxes = [];
 			//current station
 			var currentStation;
-			//fetchFinishedvar route;
+			//calculated route
+			var route = [];
 
 			//Helper Functions
-			//decide which boxes to pick
-			function pickBoxes() {
 
-			}
-			//decide next lvl 1 station
-			function findLevelTwo() {
-				pickBoxes();
+			function isLevelTwo(station) {
+				return station.Level == 2;
 			}
 
-			//decide next lvl 2 station
-			function findLevelOne() {
-				pickBoxes();
+			function isLevelOne(station) {
+				return station.Level == 1;
 			}
-
+			
 		
+			function findBox(station, number){
+				return station.boxes.contains(number);
+			}
 
 			//update sorting necessity
 			function updateSorting() {
@@ -465,6 +498,33 @@ sap.ui.define([
 				}
 			}
 
+			//init values
+			function init() {
+				boxes = sap.ui.getCore().AppContext.boxes;
+				stations = sap.ui.getCore().AppContext.stations;
+
+				function even(station) {
+					return station.NumberOfBoxes % 2 == 0;
+				}
+				evenLvlTwos = stations.filter(isLevelTwo).filter(even).length;
+				unevenLvlTwos = 3 - evenLvlTwos;
+				updateSorting();
+			}
+
+			//decide which boxes to pick
+			function pickBoxes() {
+
+			}
+			//decide next lvl 1 station
+			function findLevelTwo() {
+				pickBoxes();
+			}
+
+			//decide next lvl 2 station
+			function findLevelOne() {
+				pickBoxes();
+			}
+
 			function updateFinished() {
 				if ((stations[13].NumberOfBoxes + stations[14].NumberOfBoxes) == 8) {
 					fetchFinished = 1;
@@ -473,13 +533,26 @@ sap.ui.define([
 
 			//take boxes to target
 			function takeToTarget() {
-
+				for(var i = 1; i<=8;++i){
+					var next = stations.find(function(station){return findBox(station,i);});
+					if(next != currentStation){
+						if(currentStation.Level == 0){
+							route.push({Typ: "drive", Nr: next });
+							currentStation = next;
+						}else{
+							route.push({Typ: "drive", Nr: 16});
+							rout.pus({Typ: "unload", Nr: currentBoxes.pop().boxNr})
+						}
+					}
+					route.push({Typ: "load", Nr: i});
+				}
 			}
 
 			//routing
+			init();
 			//loop transport boxes to lvl1 stations
 			while (!fetchFinished) {
-				//TODO sorting stuff
+				updateSorting();
 				findLevelTwo();
 				findLevelOne();
 				updateFinished();
