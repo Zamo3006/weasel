@@ -17,26 +17,26 @@ sap.ui.define([
 			console.log(key);
 			if (key == "Beladen" || key == "Entladen") {
 
-			var view = (key == "Beladen"? 3 : 4);
-			console.log(view);
-			var stations = sap.ui.getCore().AppContext.stations;
-			console.log(stations);
-			console.log(stations.Boxes);
-			for (var index = 0; index < stations.length; ++index){
-				if (stations[index].Boxes !== undefined){
-					for (var i = 0; i < stations[index].Boxes.length; ++i){
-					if (stations[index].Boxes[i].loaded == 1){
-						document.getElementById("__xmlview" + view + "--l"+ (index + 1) +"-inner").style.backgroundColor="green";
-					}
-					else{
-					if (stations[index].Boxes[i].Station == 16){
-						document.getElementById("__xmlview" + view+ "--l"+ (index + 1) +"-inner").disabled = true;
-					}
-				}
-				}
-				
-				}
-			}
+			//var view = (key == "Beladen"? 3 : 4);
+			//console.log(view);
+			//var stations = sap.ui.getCore().AppContext.stations;
+			//console.log(stations);
+			//console.log(stations.Boxes);
+			//for (var index = 0; index < stations.length; ++index){
+			//	if (stations[index].Boxes !== undefined){
+			//		for (var i = 0; i < stations[index].Boxes.length; ++i){
+			//		if (stations[index].Boxes[i].loaded == 1){
+			//			document.getElementById("__xmlview" + view + "--l"+ (index + 1) +"-inner").style.backgroundColor="green";
+			//		}
+			//		else{
+			//		if (stations[index].Boxes[i].Station == 16){
+			//			document.getElementById("__xmlview" + view+ "--l"+ (index + 1) +"-inner").disabled = true;
+			//		}
+			//	}
+			//	}
+			//	
+			//	}
+			//}
 
 			} else if (key == "Route") {
 				this.fillTextButtonPressed(oEvent);
@@ -136,6 +136,7 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
+			sap.ui.getCore().AppContext.countBoxes = 0;
 			var position = this.byId("RfidTagInput").getValue();
 			if (position != 10 && position != 9) {
 				MessageToast.show("Invalid startpoint", {
@@ -159,7 +160,6 @@ sap.ui.define([
 				});
 
 			}
-			console.log(sap.ui.getCore().AppContext.stations);
 		},
 
 		loadSfasButtonPressed: function(oEvent) {
@@ -177,36 +177,56 @@ sap.ui.define([
 			}
 		},
 
-		scanBoxBeladenPressed: function(oEvent) {
-
-		},
-
-		scanBoxEntladenPressed: function(oEvent) {
-		//herausfinden der sfanr. von der box
-		//aufrufen der mehtode setdownsfa mit box sfanr. 
-		
-		if (sap.ui.getCore().AppContext.nextPosition == 16){
-			var boxName = sap.ui.getCore().AppContext.scanResult;
-		boxName = boxName.substring(boxName.length - 1);
-		this.setdownSfa(sap.ui.getCore().AppContext.boxes[boxName].id);
-		
-		var text = this.byId("NumberOfBoxesText");
-		text.setText("Delivered boxes: " + text.substring(text.length - 1) + 1);
-		}
-		
-		},
 
 		scanButtonPressed: function(oEvent) {
+			console.log(sap.ui.getCore().AppContext.route);
 			var text = this.byId("BoxText");
+			var textCount = this.byId("textCount");
 			sap.ndc.BarcodeScanner.scan(
 				function(mResult) {
 					sap.ui.getCore().AppContext.scanResult = mResult.text;
+					console.log(text);
 					text.setText("Box: " + sap.ui.getCore().AppContext.scanResult);
+				
+					console.log("Boxnr: " + sap.ui.getCore().AppContext.scanResult);
+			var boxNr = sap.ui.getCore().AppContext.scanResult;
+			boxNr = boxNr.substring(boxNr.length - 1);
+			var route = sap.ui.getCore().AppContext.route;
+				
+			
+			console.log("Next position: " + sap.ui.getCore().AppContext.nextPosition);
+			
+			console.log("Boxnr: " + boxNr);
+			console.log("Routenpunkt: " + route[0].Nr);
+			
+			
+			if (route[0].Typ == "Load"){
+				console.log("Load");
+				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 1;
+			}
+			else if (route[0].Typ == "Unload" & sap.ui.getCore().AppContext.nextPosition == 16){
+				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 0;
+				console.log("box id: " + sap.ui.getCore().AppContext.boxes[boxNr].Id);
+				sap.ui.getCore().AppContext.countBoxes++;
+				textCount.setText("Delivered boxes: " + sap.ui.getCore().AppContext.countBoxes);
+				
+				this.setdownSfa(sap.ui.getCore().AppContext.boxes[boxNr].Id);
+				
+				
+			}
+			else{
+				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 0;
+			}
+			console.log("BOx loaded state: " + sap.ui.getCore().AppContext.boxes[boxNr].loaded);
+			console.log(sap.ui.getCore().AppContext.boxes);
+					
 				},
 				function(Error) {
 
 				}
 			);
+			
+			
 		},
 
 		findSfa: function(Sfas, team) {
@@ -497,6 +517,7 @@ sap.ui.define([
 
 		//sfa für entalden von box auf ziel
 		setdownSfa: function(sfa) {
+			console.log("setdownSfa");
 			this.setSfaStatus(sfa, "80");
 		},
 
