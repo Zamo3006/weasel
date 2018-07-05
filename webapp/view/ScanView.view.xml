@@ -21,7 +21,7 @@
 	id="NextPos">
 	
 		<TextArea id="RouteText2" editable="false" value="empty"></TextArea>
-		<Text class="textCount" id="textCount" text = ""></Text>
+	
 	</f:SimpleForm>
 		
 
