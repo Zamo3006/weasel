@@ -41,13 +41,6 @@ sap.ui.define([
 				loadMetadataAsync: true
 			});
 			return oModel;
-		},
-		createTestModel: function() {
-			var oModel = new ODataModel("/sap/opu/odata/sap/ZSBP_ODATA_SCHULUNG_SRV/", {
-				json: true,
-				loadMetadataAsync: true
-			});
-			return oModel;
 		}
 	};
 });
