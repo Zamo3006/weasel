@@ -22,15 +22,15 @@ sap.ui.define([
 			this.testBoxesArray = [{
 				Ladetraeger: "Kiste-21",
 				Sfanr: 7321,
-				KnotenVon: 13
+				KnotenVon: 11
 			}, {
 				Ladetraeger: "Kiste-22",
 				Sfanr: 7322,
-				KnotenVon: 11
+				KnotenVon: 12
 			}, {
 				Ladetraeger: "Kiste-23",
 				Sfanr: 7323,
-				KnotenVon: 12
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-24",
 				Sfanr: 7334,
@@ -42,7 +42,7 @@ sap.ui.define([
 			}, {
 				Ladetraeger: "Kiste-26",
 				Sfanr: 7326,
-				KnotenVon: 15
+				KnotenVon: 13
 			}, {
 				Ladetraeger: "Kiste-27",
 				Sfanr: 7327,
@@ -50,11 +50,7 @@ sap.ui.define([
 			}, {
 				Ladetraeger: "Kiste-28",
 				Sfanr: 7328,
-				KnotenVon: 12
-			}, {
-				Ladetraeger: "Kiste-11",
-				Sfanr: 7329,
-				KnotenVon: 15
+				KnotenVon: 11
 			}];
 		},
 
@@ -79,7 +75,10 @@ sap.ui.define([
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
-			this.getSfas();
+			//this.getSfas();
+			console.log(sap.ui.getCore().AppContext.boxes);
+			console.log(sap.ui.getCore().AppContext.stations);
+			console.log(sap.ui.getCore().AppContext.route);
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -159,7 +158,7 @@ sap.ui.define([
 				//add
 				var boxx = Sfas[index];
 				if (boxx.Ladetraeger.indexOf(team) !== -1) {
-					var boxNr = boxx.Ladetraeger.substring(boxx.Ladetraeger.length - 1);
+					var boxNr = parseInt(boxx.Ladetraeger.substring(boxx.Ladetraeger.length - 1));
 					boxes[boxNr] = {
 						Id: boxx.Sfanr,
 						Nr: boxNr,
@@ -351,8 +350,6 @@ sap.ui.define([
 		//DO SOMETHING!
 		routingFunction: function(start) {
 
-			//boxes {nr, station, lvl, loaded}
-			var boxes;
 			//station {nr, Boxes, #Boxes, Lvl)
 			var stations;
 			//Lvl 1 station to collect boxes
@@ -383,7 +380,7 @@ sap.ui.define([
 						evenLvlTwos.splice(e,1);
 					}
 				}
-				for(var u = unevenLvlTwos.length; u >= 0; --u){
+				for(var u = unevenLvlTwos.length-1; u >= 0; --u){
 					if(unevenLvlTwos[u].Boxes.length == 0){
 						unevenLvlTwos.splice(u,1);
 					}
@@ -424,7 +421,6 @@ sap.ui.define([
 
 			//init values
 			function init() {
-				boxes = sap.ui.getCore().AppContext.boxes;
 				stations = sap.ui.getCore().AppContext.stations;
 				selectLevelOne();
 				if (unselectedOne.NumberOfBoxes % 2 == 1) {
@@ -437,16 +433,18 @@ sap.ui.define([
 			function takeToLevelOne() {
 				route.push({
 					Typ: "Drive",
-					Nr: selectedOne.NR
+					Nr: selectedOne.NR,
+					H : "take"
 				});
 				currentStation = selectedOne;
-				for (var o = 0; o < currentBoxes.length; ++o) {
+				var l = currentBoxes.length;
+				for (var o = 0; o < l; ++o) {
 					var box = currentBoxes.pop();
 					route.push({
 						Typ: "Unload",
-						Nr: box.Nr
+						Nr: box
 					});
-					selectedOne.Boxes.push(box.Nr);
+					selectedOne.Boxes.push(box);
 				}
 			}
 
@@ -454,18 +452,18 @@ sap.ui.define([
 			function pickBoxes() {
 				var box;
 				if (currentBoxes.length < 2) {
-					box = currentStation.boxes.pop();
+					box = currentStation.Boxes.pop();
 					currentBoxes.push(box);
 					route.push({
 						Typ: "Load",
-						Nr: box.Nr
+						Nr: box
 					});
-					if (currentBoxes.length == 1 && currentStation.boxes.length > 0) {
-						box = currentStation.boxes.pop();
+					if (currentBoxes.length == 1 && currentStation.Boxes.length > 0) {
+						box = currentStation.Boxes.pop();
 						currentBoxes.push(box);
 						route.push({
 							Typ: "Load",
-							Nr: box.Nr
+							Nr: box
 						});
 					}
 				}
@@ -476,7 +474,8 @@ sap.ui.define([
 			function startTen() {
 				route.push({
 					Typ: "Drive",
-					Nr: unselectedOne.NR
+					Nr: unselectedOne.NR,
+					H: "ten1"
 				});
 				currentStation = unselectedOne;
 				pickBoxes();
@@ -485,6 +484,7 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: next.NR
+						,H: "ten2"
 					});
 					currentStation = next;
 					pickBoxes();
@@ -498,12 +498,14 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: 11
+						,H: "nine1"
 					});
 					currentStation = stations[11];
 				} else {
 					route.push({
 						Typ: "Drive",
 						Nr: 12
+						,H:"nine2"
 					});
 					currentStation = stations[12];
 				}
@@ -520,10 +522,9 @@ sap.ui.define([
 				}else if(unevenLvlTwos.length > 0){
 					next = unevenLvlTwos[0];
 				}
-				route.push({Typ: "Drive", Nr: next.NR});
+				route.push({Typ: "Drive", Nr: next.NR, H: "findlvl2"});
 				currentStation = next;
 				pickBoxes();
-				takeToLevelOne();
 			}
 
 			function updateFinished() {
@@ -538,6 +539,7 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: selectedOne.NR
+						,H:"target1"
 					});
 					currentStation = selectedOne;
 				}
@@ -588,6 +590,8 @@ sap.ui.define([
 				updateFinished();
 			}
 			takeToTarget();
+			
+			sap.ui.getCore().AppContext.route = route; 
 		}
 	});
 

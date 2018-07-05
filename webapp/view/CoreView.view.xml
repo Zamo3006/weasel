@@ -13,7 +13,8 @@
 					id="tab_id"
 					expanded="{device>/isNoPhone}"
 					class="sapUiResponsiveContentPadding"
-					expandable = "false">
+					expandable = "false"
+					stretchContentHeight="true">
 					<items>
 						<IconTabFilter
 							key="Start"
