@@ -54,16 +54,25 @@ sap.ui.define([
 				KnotenVon: 11
 			}];
 		},
+		
+		fillTextButtonPressed: function(oEvent){
+			var field = this.byId("RouteText");
+			var text  = "";
+			var route = sap.ui.getCore().AppContext.route;
+			for(var c = 0; c < route.length; ++c){
+				text += route[c].Typ+" "+route[c].Nr+"\n";
+			}
+			field.setValue(text);
+		},
 
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			var test = 1;
 			if(position != 10 && position != 9){
 				MessageToast.show("Invalid startpoint", {
 					duration: 5000
 				});
 			}else{
-				if(!test){
+				if(!this.test){
 				this.getSfas();
 				this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
 				}else{
@@ -71,13 +80,20 @@ sap.ui.define([
 					this.findSfa(this.testBoxesArray, this.teamBox);
 				}
 				this.routingFunction(position);
+				var message = "Calcualting route finished";
+				if(this.test){
+					message += " with test data";
+				}
+					MessageToast.show(message, {
+					duration: 5000
+				});
+				
 			}
 
 		},
 
-		resetRouteButtonPressed: function(oEvent) {
-			//this.getSfas();
-			console.log(sap.ui.getCore().AppContext.route);
+		loadSfasButtonPressed: function(oEvent) {
+			this.getSfas();
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -92,7 +108,7 @@ sap.ui.define([
 		},
 
 		scanBoxBeladenPressed: function(oEvent) {
-
+		
 		},
 
 		scanBoxEntladenPressed: function(oEvent) {
@@ -295,6 +311,8 @@ sap.ui.define([
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
+			//TODO NEED TO CHANGE THIS!!!!!
+			this.test = 1;
 		},
 
 		// get current status of weasel
@@ -376,7 +394,7 @@ sap.ui.define([
 					});
 				},
 				error: function(e) {
-					MessageToast.show(e, {
+					MessageToast.show("Couldn't read Sfas", {
 						duration: 5000
 					});
 				},
