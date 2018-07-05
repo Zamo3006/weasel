@@ -13,14 +13,6 @@ sap.ui.define([
 
 		loadButtonColors: function(oEvent) {
 			this.updateTextFields();
-			var key = oEvent.getParameter("key");
-			if (key == "Beladen") {
-
-			} else if (key == "Entladen") {
-
-			} else if (key == "Route") {
-				this.fillTextButtonPressed(oEvent);
-			}
 		},
 
 		startButtonPressed: function(oEvent) {
@@ -81,7 +73,10 @@ sap.ui.define([
 			var fields = [sap.ui.getCore().byId("__xmlview2--RouteText2"), sap.ui.getCore().byId("__xmlview3--RouteText3"), sap.ui.getCore().byId(
 				"__xmlview4--RouteText4"), sap.ui.getCore().byId("__xmlview5--RouteText")];
 			var text = "";
-			var route = sap.ui.getCore().AppContext.route;
+			var route = [];
+			if (typeof sap.ui.getCore().AppContext.route != 'undefined') {
+				route = sap.ui.getCore().AppContext.route;
+			}
 			for (var c = 0; c < route.length; ++c) {
 				text += route[c].Typ + " " + route[c].Nr + "\n";
 			}
@@ -93,6 +88,7 @@ sap.ui.define([
 					fields[f].setRows(5);
 				}
 			}
+			sap.ui.getCore().byId("__xmlview2--textCount").setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
 		},
 
 		nextPosPressed: function(oEvent) {
@@ -108,6 +104,22 @@ sap.ui.define([
 			this.updateTextFields();
 		},
 
+		nextPosPressedNoAction: function(oEvent) {
+			var route = sap.ui.getCore().AppContext.route;
+			var index = 0;
+			while (route[index].Typ != "Drive") {
+				index++;
+			}
+			sap.ui.getCore().AppContext.nextTarget = route[index].Nr;
+			route.splice(0, index + 1);
+			sap.ui.getCore().AppContext.route = route;
+			this.updateTextFields();
+			sap.ui.getCore().AppContext.nextPosition = sap.ui.getCore().AppContext.nextTarget;
+			MessageToast.show("Send Weasel to " + sap.ui.getCore().AppContext.nextTarget + "...not", {
+				duration: 5000
+			});
+		},
+
 		skipStepButtonPressed: function(oEvent) {
 			var route = sap.ui.getCore().AppContext.route;
 			route.splice(0, 1);
@@ -116,34 +128,52 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-			var position = this.byId("RfidTagInput").getValue();
-			if (position != 10 && position != 9) {
-				MessageToast.show("Invalid startpoint", {
-					duration: 5000
+			var b = sap.ui.getCore().AppContext.boxes.filter(function(n) {
+				return n;
+			}).length;
+			if (b < 8) {
+				MessageToast.show("Only " + b + " Boxes found!", {
+					Duration: 5000
 				});
 			} else {
-				if (!this.test) {
-					this.getSfas();
-					this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
+				sap.ui.getCore().AppContext.atTarget = 0;
+				var position = this.byId("RfidTagInput").getValue();
+				if (position != 10 && position != 9) {
+					MessageToast.show("Invalid startpoint", {
+						duration: 5000
+					});
 				} else {
-					this.testBoxes();
-					this.findSfa(this.testBoxesArray, this.teamBox);
-				}
-				this.routingFunction(position);
-				var message = "Calcualting route finished";
-				if (this.test) {
-					message += " with test data";
-				}
-				MessageToast.show(message, {
-					duration: 5000
-				});
+					if (!this.test) {
+						this.getSfas();
+						this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
+					} else {
+						this.testBoxes();
+						this.findSfa(this.testBoxesArray, this.teamBox);
+					}
+					this.routingFunction(position);
+					var message = "Calculating route finished";
+					if (this.test) {
+						message += " with test data";
+					}
+					MessageToast.show(message, {
+						duration: 5000
+					});
 
+				}
 			}
-
 		},
 
 		loadSfasButtonPressed: function(oEvent) {
 			this.getSfas();
+			this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
+
+			MessageToast.show("Loaded " + sap.ui.getCore().AppContext.Sfas.length + " Sfas. Filtered to " + sap.ui.getCore().AppContext.boxes.filter(
+				function(n) {
+					return n;
+				}).length + " boxes.", {
+				duration: 5000
+			});
+			console.log(sap.ui.getCore().AppContext.boxes);
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -157,25 +187,55 @@ sap.ui.define([
 			}
 		},
 
-		scanBoxBeladenPressed: function(oEvent) {
-
-		},
-
-		scanBoxEntladenPressed: function(oEvent) {
-
-		},
-
 		scanButtonPressed: function(oEvent) {
 			var text = this.byId("BoxText");
+			var counter = this.byId("textCount");
+			var route = sap.ui.getCore().AppContext.route;
+			var index = 0;
+			var loadTasks = [];
+			var controller = this;
+			while (index < route.length && route[index].Typ != "Drive") {
+				loadTasks.push(route[index]);
+				index++;
+			}
 			sap.ndc.BarcodeScanner.scan(
 				function(mResult) {
 					sap.ui.getCore().AppContext.scanResult = mResult.text;
-					text.setText("Box: " + sap.ui.getCore().AppContext.scanResult);
+
+					function findBox(task) {
+						return task.Nr == mResult.text.substring(mResult.text.length - 1);
+					}
+					var task = loadTasks.find(findBox);
+					if (typeof task != 'undefined') {
+						var typ = task.Typ;
+						MessageToast.show(typ + "ed Box " + task.Nr);
+						route.splice(route.indexOf(task), 1);
+
+						if (typ == "Load") {
+							sap.ui.getCore().AppContext.boxes[task.Nr].loaded = 1;
+						} else if (typ == "Unload") {
+							sap.ui.getCore().AppContext.boxes[task.Nr].loaded = 0;
+							sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
+						}
+						if (sap.ui.getCore().AppContext.nextPosition == 16) {
+							sap.ui.getCore().AppContext.atTarget++;
+							counter.setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
+							var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
+							controller.setdownSfa(sfanr);
+						}
+					} else {
+						MessageToast.show("No task for box found!", {
+							duration: 5000
+						});
+					}
+					controller.updateTextFields();
+
 				},
 				function(Error) {
 
 				}
 			);
+
 		},
 
 		findSfa: function(Sfas, team) {
@@ -240,109 +300,48 @@ sap.ui.define([
 		},
 
 		loadBox: function(oEvent) {
-			sap.ui.getCore().AppContext.bgColor = "blue";
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+			var route = sap.ui.getCore().AppContext.route;
+			var index = 0;
+			var loadTasks = [];
+			while (index < route.length && route[index].Typ != "Drive") {
+				loadTasks.push(route[index]);
+				index++;
+			}
 
-			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
-				var box = sap.ui.getCore().AppContext.boxes[boxId];
-				if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined) {
-					var station = sap.ui.getCore().AppContext.stations[box.Station];
-					console.log(station);
-					if (station.NumberOfBoxes > 0) {
-						station.NumberOfBoxes--;
-						station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
-						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "green";
-						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "!important";
-						sap.ui.getCore().AppContext.bgColor = "green";
-						console.log(sap.ui.getCore().AppContext.stations);
-						console.log(sap.ui.getCore().AppContext.boxes);
-
-					} else {
-						MessageToast.show("Station " + station.NR + "does not contain a box with index " + boxId + ".", {
-							duration: 5000
-						});
-					}
-				} else {
-					MessageToast.show("No box with index " + boxId + " found.", {
-						duration: 5000
-					});
+			function findBox(task) {
+				return task.Nr == boxId;
+			}
+			var task = loadTasks.find(findBox);
+			if (typeof task != 'undefined') {
+				var typ = task.Typ;
+				MessageToast.show(typ + "ed Box " + task.Nr);
+				route.splice(route.indexOf(task), 1);
+				this.updateTextFields();
+				if (typ == "Load") {
+					sap.ui.getCore().AppContext.boxes[task.Nr].loaded = 1;
+				} else if (typ == "Unload") {
+					sap.ui.getCore().AppContext.boxes[task.Nr].loaded = 0;
+					sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
+				}
+				if (sap.ui.getCore().AppContext.nextPosition == 16) {
+					sap.ui.getCore().AppContext.atTarget++;
+					var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
+					this.setdownSfa(sfanr);
 				}
 			} else {
-				MessageToast.show("No box with index " + boxId + " found.", {
+				MessageToast.show("No task for box found!", {
 					duration: 5000
 				});
-
 			}
-			box.loaded = 1;
-		},
-
-		BeladenViewTabClicked: function(oEvent) {
-			console.log("Methode BeladenViewTabClicked aufgerufen");
-			var stations = sap.ui.getCore().AppContext.stations;
-			for (var index = 0; index < stations.length; ++index) {
-				for (var i = 0; index < stations.Boxes.length; ++index) {
-					if (stations[index].Boxes[i].loaded == 1) {
-						document.getElementById("__xmlview3--l" + (index + 1) + "-inner").style.backgroundColor = "green";
-					} else {
-						if (stations[index].Boxes[i].Station == 16) {
-							document.getElementById("__xmlview3--l" + (index + 1) + "-inner").disabled = true;
-						}
-					}
-				}
-			}
-
 		},
 
 		unloadBox: function(oEvent) {
-
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-
-			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
-				var box = sap.ui.getCore().AppContext.boxes[boxId];
-
-				var pos = sap.ui.getCore().AppContext.nextPosition;
-				console.log(pos);
-
-				if (pos !== undefined) {
-					sap.ui.getCore().AppContext.stations[pos].Boxes.push(boxId);
-					sap.ui.getCore().AppContext.stations[pos].NumberOfBoxes++;
-					box.Station = pos;
-
-				} else {
-					sap.ui.getCore().AppContext.stations[16].Boxes.push(boxId)
-					sap.ui.getCore().AppContext.stations[16].NumberOfBoxes++;
-					box.Station = 16;
-				}
-				console.log(sap.ui.getCore().AppContext.stations);
-				console.log(sap.ui.getCore().AppContext.boxes);
-
-			} else {
-				MessageToast.show("No box with index " + boxId + " found.", {
-					duration: 5000
-				});
-
-			}
-			box.loaded = 0;
-
-		},
-
-		boxButtonPickPressed: function(oEvent) {
-
-			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
-
-			//var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			//	Nr: 16,
-			//	loaded: 1
-			//};
-			var station = sap.ui.getCore().AppContext.stations[16];
-
-			if (station.NumberOfBoxes > 0) {
-				station.NumberOfBoxes--;
-			} else {
-
-			}
-
-			//sap.ui.getCore().AppContext.stations[]
+			sap.ui.getCore().AppContext.atTarget++;
+			var sfanr = sap.ui.getCore().AppContext.boxes[boxId].Id;
+			this.setdownSfa(sfanr);
+			this.updateTextFields();
 
 		},
 
@@ -351,8 +350,9 @@ sap.ui.define([
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
+			sap.ui.getCore().AppContext.atTarget = 0;
 			//TODO NEED TO CHANGE THIS!!!!!
-			this.test = 1;
+			this.test = 0;
 		},
 
 		// get current status of weasel

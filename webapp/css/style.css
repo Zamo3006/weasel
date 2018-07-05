@@ -216,6 +216,13 @@
 	width:100%;
 }
 .BoxText .sapMText{
-	font-size: 2.5rem;
-	line-height: 2;
+	font-size: 2rem;
+	line-height: 2rem;
+	text-align: center;
+}
+
+.sapMText{
+	font-size: 2rem;
+	text-align: center !important;
+	margin-top: 1rem;
 }
