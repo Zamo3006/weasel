@@ -27,5 +27,10 @@
 		<Button class="BoxButton" id="BoxButton07" text="BOX 7" press="boxButtonUnloadPressed"/>
 		<Button class="BoxButton" id="BoxButton08" text="BOX 8" press="boxButtonUnloadPressed"/>
 	</f:SimpleForm>
+	<f:SimpleForm 
+	class="NextPos"
+	id="NextPos">
+		<Button class="NextPosi" id="NextPosi2" text="Next Pos" press="NextPosPressed"/>
+	</f:SimpleForm>
 	
 </mvc:View>
