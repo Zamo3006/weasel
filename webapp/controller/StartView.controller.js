@@ -217,7 +217,7 @@ sap.ui.define([
 			console.log(station);
 			if (station.NumberOfBoxes > 0) {
 				station.NumberOfBoxes--;	
-				station.Boxes.splice(boxId - 1, 1);
+				station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
 				console.log(sap.ui.getCore().AppContext.stations);
 				console.log(sap.ui.getCore().AppContext.boxes);
 				
