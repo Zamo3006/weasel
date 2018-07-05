@@ -26,7 +26,6 @@ sap.ui.define([
 			this.setModel(models.createWeaselModel(), "weasel");
 			this.setModel(models.createChallengeModel(), "challenge");
 			this.setModel(models.createWeaselChallengeModel(), "weaselChallenge");
-			this.setModel(models.createTestModel(), "test");
 		}
 	});
 });

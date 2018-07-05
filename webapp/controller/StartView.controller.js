@@ -62,9 +62,11 @@ sap.ui.define([
 			//var position = this.byId("RfidTagInput").getValue();
 			//this.getSfas();
 		//	this.writeWeaselStatus();
-				this.testBoxes();
-			console.log(sap.ui.getCore().AppContext.stations);
+				
+				
+			this.testBoxes();
 			this.findSfa(this.testBoxesArray, "Kiste-2");
+			
 			var position = this.byId("RfidTagInput").getValue();
 			this.getView().getModel("test").create(
 				"Customer(Kdnr='"+position+"')", {
@@ -104,6 +106,7 @@ sap.ui.define([
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
+			console.log(this.byId("RfidTagInput").getValue());
 			var position = this.byId("RfidTagInput").getValue();
 			if (position > 0 && position < 17) {
 				this.sendWeaselToPosition(position);
@@ -206,9 +209,6 @@ sap.ui.define([
 			
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 		
-			//function getActualBox(box){
-			//	return box.Nr == boxId;
-			//}
 			
 				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
 					var box = sap.ui.getCore().AppContext.boxes[boxId];
@@ -246,33 +246,27 @@ sap.ui.define([
 
 						var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 		
-			//function getActualBox(box){
-			//	return box.Nr == boxId;
-			//}
 			
 				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
 					var box = sap.ui.getCore().AppContext.boxes[boxId];
-					if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined){
-						var station = sap.ui.getCore().AppContext.stations[box.Station];
-			console.log(station);
-			if (station.Boxes.includes(box) === false) {
-				station.NumberOfBoxes++;
-				console.log(this.byId("RfidTagInput").getValue());
-				station.Boxes.push(boxId);
+			
+				var pos = sap.ui.getCore().AppContext.nextPosition;
+				console.log(pos);
+				
+				if (pos !== undefined){
+					sap.ui.getCore().AppContext.stations[pos].Boxes.push(boxId);
+					sap.ui.getCore().AppContext.stations[pos].NumberOfBoxes++;
+					box.Station = pos;
+					
+				}
+				else{
+					sap.ui.getCore().AppContext.stations[16].Boxes.push(boxId)
+					sap.ui.getCore().AppContext.stations[16].NumberOfBoxes++;
+					box.Station = 16;
+				}
 				console.log(sap.ui.getCore().AppContext.stations);
 				console.log(sap.ui.getCore().AppContext.boxes);
-				
-			} else {
-				MessageToast.show("Box " + boxId + " is already on station " + station.NR + ".", {
-						duration: 5000
-					});
-			}
-					}
-					else{
-							MessageToast.show("No box with index " + boxId + " found on station" + station.NR + ".", {
-						duration: 5000
-					});
-					}
+
 				}
 				else{
 					MessageToast.show("No box with index " + boxId + " found.", {
