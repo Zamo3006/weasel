@@ -3,7 +3,6 @@ sap.ui.define([
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ndc/BarcodeScanner",
-
 	"sap/m/MessageToast"
 ], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
