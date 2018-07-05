@@ -13,9 +13,25 @@ sap.ui.define([
 
 		loadButtonColors: function(oEvent) {
 			var key = oEvent.getParameter("key");
-			if (key == "Beladen") {
+			console.log(key);
+			if (key == "Beladen" || key == "Entladen") {
 
-			} else if (key == "Entladen") {
+			var view = (key == "Beladen"? 3 : 4);
+			console.log(view);
+			var stations = sap.ui.getCore().AppContext.stations;
+			console.log(stations);
+			for (var index = 0; index < stations.length(); ++index){
+				for (var i = 0; index < stations.Boxes.length(); ++index){
+					if (stations[index].Boxes[i].loaded == 1){
+						document.getElementById("__xmlview" + view + "--l"+ (index + 1) +"-inner").style.backgroundColor="green";
+					}
+					else{
+					if (stations[index].Boxes[i].Station == 16){
+						document.getElementById("__xmlview" + view+ "--l"+ (index + 1) +"-inner").disabled = true;
+					}
+				}
+				}
+			}
 
 			} else if (key == "Route") {
 				this.fillTextButtonPressed(oEvent);
@@ -99,7 +115,7 @@ sap.ui.define([
 				});
 
 			}
-
+			console.log(sap.ui.getCore().AppContext.stations);
 		},
 
 		loadSfasButtonPressed: function(oEvent) {
