@@ -19,5 +19,9 @@
 	<f:SimpleForm class="BoxesButtonsContent" id="BoxesButtonsContent4">
 		<Button class="BoxButton" id="u7" text="BOX 7" press="unloadBox"/>
 		<Button class="BoxButton" id="u8" text="BOX 8" press="unloadBox"/>
+		
 	</f:SimpleForm>
+	<f:SimpleForm class="BoxesCountTextContent" id="BoxesCountTextContent4">
+		<Text class="textCount" id="textCount" text = ""></Text>
+		</f:SimpleForm>
 </mvc:View>

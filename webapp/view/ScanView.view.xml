@@ -10,19 +10,15 @@
 		<Text class="BoxText" id="BoxText" text = "Box: "></Text>
 	</f:SimpleForm>	
 	<f:SimpleForm 
-	class="Scan123"
-	id="Scan1">
-		<Button class="ScanBeladenButton" id="ScanBeladenButton" text="Beladen" press="scanBoxBeladenPressed"/>
-		<Button class="ScanEntladenButton" id="ScanEntladenButton" text="Entladen" press="scanBoxEntladenPressed"/>
-	</f:SimpleForm>	
-	<f:SimpleForm 
 	class="NextPos"
 	id="NextPos">
 		<Button class="NextPosi" id="NextPosi3" text="Next Pos" press="nextPosPressed"/>
 		<TextArea id="RouteText2" editable="false" value="empty"></TextArea>
+	</f:SimpleForm>
+	<f:SimpleForm 
+	class="boxesCountText"
+	id="boxesCountText">
 		<Text class="textCount" id="textCount" text = ""></Text>
 	</f:SimpleForm>
-		
-
 	
 </mvc:View>

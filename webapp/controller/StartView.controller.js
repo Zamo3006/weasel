@@ -14,30 +14,20 @@ sap.ui.define([
 		loadButtonColors: function(oEvent) {
 			this.updateTextFields();
 			var key = oEvent.getParameter("key");
-			console.log(key);
 			if (key == "Beladen" || key == "Entladen") {
-
-			//var view = (key == "Beladen"? 3 : 4);
-			//console.log(view);
-			//var stations = sap.ui.getCore().AppContext.stations;
-			//console.log(stations);
-			//console.log(stations.Boxes);
-			//for (var index = 0; index < stations.length; ++index){
-			//	if (stations[index].Boxes !== undefined){
-			//		for (var i = 0; i < stations[index].Boxes.length; ++i){
-			//		if (stations[index].Boxes[i].loaded == 1){
-			//			document.getElementById("__xmlview" + view + "--l"+ (index + 1) +"-inner").style.backgroundColor="green";
-			//		}
-			//		else{
-			//		if (stations[index].Boxes[i].Station == 16){
-			//			document.getElementById("__xmlview" + view+ "--l"+ (index + 1) +"-inner").disabled = true;
-			//		}
-			//	}
-			//	}
-			//	
-			//	}
-			//}
-
+			if (sap.ui.getCore().AppContext.countBoxes.length > 0){
+				for (var boxNr = 0; boxNr < sap.ui.getCore().AppContext.countBoxes.length; boxNr++){
+					if (key == "Beladen"){
+						console.log("__xmlview3--l" + sap.ui.getCore().AppContext.countBoxes[boxNr] + "-inner");
+						this.byId("__xmlview3--l" + sap.ui.getCore().AppContext.countBoxes[boxNr] + "-inner").disabled = isDisabled;
+					}
+					else{
+						console.log("__xmlview4--u" + sap.ui.getCore().AppContext.countBoxes[boxNr] + "-inner");
+						this.byId("__xmlview4--u" + sap.ui.getCore().AppContext.countBoxes[boxNr] + "-inner").disabled = "true";
+					}
+					
+				}
+			}
 			} else if (key == "Route") {
 				this.fillTextButtonPressed(oEvent);
 			}
@@ -136,7 +126,7 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-			sap.ui.getCore().AppContext.countBoxes = 0;
+			sap.ui.getCore().AppContext.countBoxes = [];
 			var position = this.byId("RfidTagInput").getValue();
 			if (position != 10 && position != 9) {
 				MessageToast.show("Invalid startpoint", {
@@ -179,46 +169,34 @@ sap.ui.define([
 
 
 		scanButtonPressed: function(oEvent) {
-			console.log(sap.ui.getCore().AppContext.route);
 			var text = this.byId("BoxText");
 			var textCount = this.byId("textCount");
 			sap.ndc.BarcodeScanner.scan(
 				function(mResult) {
 					sap.ui.getCore().AppContext.scanResult = mResult.text;
-					console.log(text);
 					text.setText("Box: " + sap.ui.getCore().AppContext.scanResult);
 				
-					console.log("Boxnr: " + sap.ui.getCore().AppContext.scanResult);
 			var boxNr = sap.ui.getCore().AppContext.scanResult;
 			boxNr = boxNr.substring(boxNr.length - 1);
 			var route = sap.ui.getCore().AppContext.route;
 				
-			
-			console.log("Next position: " + sap.ui.getCore().AppContext.nextPosition);
-			
-			console.log("Boxnr: " + boxNr);
-			console.log("Routenpunkt: " + route[0].Nr);
-			
-			
 			if (route[0].Typ == "Load"){
-				console.log("Load");
 				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 1;
 			}
 			else if (route[0].Typ == "Unload" & sap.ui.getCore().AppContext.nextPosition == 16){
 				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 0;
-				console.log("box id: " + sap.ui.getCore().AppContext.boxes[boxNr].Id);
-				sap.ui.getCore().AppContext.countBoxes++;
-				textCount.setText("Delivered boxes: " + sap.ui.getCore().AppContext.countBoxes);
+				sap.ui.getCore().AppContext.countBoxes.push(boxNr);
+				textCount.setText("Delivered boxes: " + sap.ui.getCore().AppContext.countBoxes.length);
 				
 				this.setdownSfa(sap.ui.getCore().AppContext.boxes[boxNr].Id);
 				
+				this.byId("l" + boxNr).disabled = true;
+				this.byId("u" + boxNr).disabled = true;
 				
 			}
 			else{
 				sap.ui.getCore().AppContext.boxes[boxNr].loaded = 0;
 			}
-			console.log("BOx loaded state: " + sap.ui.getCore().AppContext.boxes[boxNr].loaded);
-			console.log(sap.ui.getCore().AppContext.boxes);
 					
 				},
 				function(Error) {
@@ -291,23 +269,21 @@ sap.ui.define([
 		},
 
 		loadBox: function(oEvent) {
-			sap.ui.getCore().AppContext.bgColor = "blue";
+			
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 
 			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
 				var box = sap.ui.getCore().AppContext.boxes[boxId];
+				
 				if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined) {
+					
 					var station = sap.ui.getCore().AppContext.stations[box.Station];
-					console.log(station);
+					
 					if (station.NumberOfBoxes > 0) {
 						station.NumberOfBoxes--;
-						station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
+						//station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
 						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "green";
-						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "!important";
-						sap.ui.getCore().AppContext.bgColor = "green";
-						console.log(sap.ui.getCore().AppContext.stations);
-						console.log(sap.ui.getCore().AppContext.boxes);
-
+						
 					} else {
 						MessageToast.show("Station " + station.NR + "does not contain a box with index " + boxId + ".", {
 							duration: 5000
@@ -327,45 +303,32 @@ sap.ui.define([
 			box.loaded = 1;
 		},
 
-		BeladenViewTabClicked: function(oEvent) {
-			console.log("Methode BeladenViewTabClicked aufgerufen");
-			var stations = sap.ui.getCore().AppContext.stations;
-			for (var index = 0; index < stations.length; ++index) {
-				for (var i = 0; index < stations.Boxes.length; ++index) {
-					if (stations[index].Boxes[i].loaded == 1) {
-						document.getElementById("__xmlview3--l" + (index + 1) + "-inner").style.backgroundColor = "green";
-					} else {
-						if (stations[index].Boxes[i].Station == 16) {
-							document.getElementById("__xmlview3--l" + (index + 1) + "-inner").disabled = true;
-						}
-					}
-				}
-			}
-
-		},
-
 		unloadBox: function(oEvent) {
 
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-
+			var textCount = this.byId("textCount");
 			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
 				var box = sap.ui.getCore().AppContext.boxes[boxId];
 
 				var pos = sap.ui.getCore().AppContext.nextPosition;
-				console.log(pos);
 
 				if (pos !== undefined) {
+					if (pos == 16 & !sap.ui.getCore().AppContext.countBoxes.includes(boxId)){
+						sap.ui.getCore().AppContext.countBoxes.push(boxId);
+						
+					textCount.setText("Delivered boxes: " + sap.ui.getCore().AppContext.countBoxes.length);
+					}
+					else if (pos == 16){
+						document.getElementById("__xmlview4--l" + (index + 1) + "-inner").disabled = true;
+					}
+					else{
+						document.getElementById("__xmlview4--l" + (index + 1) + "-inner").style.backgroundColor = "blue";
+					}
 					sap.ui.getCore().AppContext.stations[pos].Boxes.push(boxId);
 					sap.ui.getCore().AppContext.stations[pos].NumberOfBoxes++;
 					box.Station = pos;
 
-				} else {
-					sap.ui.getCore().AppContext.stations[16].Boxes.push(boxId)
-					sap.ui.getCore().AppContext.stations[16].NumberOfBoxes++;
-					box.Station = 16;
 				}
-				console.log(sap.ui.getCore().AppContext.stations);
-				console.log(sap.ui.getCore().AppContext.boxes);
 
 			} else {
 				MessageToast.show("No box with index " + boxId + " found.", {
@@ -517,7 +480,6 @@ sap.ui.define([
 
 		//sfa für entalden von box auf ziel
 		setdownSfa: function(sfa) {
-			console.log("setdownSfa");
 			this.setSfaStatus(sfa, "80");
 		},
 
