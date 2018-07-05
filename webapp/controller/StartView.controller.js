@@ -20,8 +20,10 @@ sap.ui.define([
 			console.log(view);
 			var stations = sap.ui.getCore().AppContext.stations;
 			console.log(stations);
-			for (var index = 0; index < stations.length(); ++index){
-				for (var i = 0; index < stations.Boxes.length(); ++index){
+			console.log(stations.Boxes);
+			for (var index = 0; index < stations.length; ++index){
+				if (stations[index].Boxes !== undefined){
+					for (var i = 0; i < stations[index].Boxes.length; ++i){
 					if (stations[index].Boxes[i].loaded == 1){
 						document.getElementById("__xmlview" + view + "--l"+ (index + 1) +"-inner").style.backgroundColor="green";
 					}
@@ -30,6 +32,8 @@ sap.ui.define([
 						document.getElementById("__xmlview" + view+ "--l"+ (index + 1) +"-inner").disabled = true;
 					}
 				}
+				}
+				
 				}
 			}
 
