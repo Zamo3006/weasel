@@ -80,6 +80,22 @@
 	padding-left:2;
 	padding-right:2;
 }
+.ScanContent .sapUiFormResLayout>div{
+	padding-top:0;
+	padding-bottom:0;
+}
+.Scan123 .sapUiFormResLayout>div{
+	padding-top:0;
+	padding-bottom:0;
+	padding-left:2;
+	padding-right:2;
+}
+.NextPos .sapUiFormResLayout>div{
+	padding-top:0;
+	padding-bottom:0;
+	padding-left:2;
+	padding-right:2;
+}
 
 .RfidTagInput{
 	height:4rem;
@@ -134,4 +150,72 @@
 .BoxButton .sapMBtnContent {
 	line-height: 4.5rem;
 	width:100%;
+}
+.NextPosi{
+	height:5rem;
+	width:100%;
+}
+.NextPosi .sapMBtnInner{
+	background-color:#006600;
+	color:white;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    height:5rem;
+}
+.NextPosi .sapMBtnContent {
+	line-height: 4.5rem;
+	width:100%;
+}
+.ScanButton{
+	height:5rem;
+	width:100%;
+}
+.ScanButton .sapMBtnInner{
+	background-color:orange;
+	color:white;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    height:5rem;
+}
+.ScanButton .sapMBtnContent {
+	line-height: 4.5rem;
+	width:100%;
+}
+.ScanBeladenButton{
+	height:5rem;
+	width:100%;
+}
+.ScanBeladenButton .sapMBtnInner{
+	background-color:#9ACD32;
+	color:white;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    height:5rem;
+}
+.ScanBeladenButton .sapMBtnContent {
+	line-height: 4.5rem;
+	width:100%;
+}
+.ScanEntladenButton{
+	height:5rem;
+	width:100%;
+}
+.ScanEntladenButton .sapMBtnInner{
+	background-color:#FF4500;
+	color:white;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    height:5rem;
+}
+.ScanEntladenButton .sapMBtnContent {
+	line-height: 4.5rem;
+	width:100%;
+}
+.BoxText .sapMText{
+	font-size: 2.5rem;
+	line-height: 2;
 }
