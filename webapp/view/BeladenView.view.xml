@@ -12,20 +12,20 @@
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent02">
-		<Button class="BoxButton3" id="l3" text="BOX 3" press="loadBox"/>
-		<Button class="BoxButton4" id="l4" text="BOX 4" press="loadBox"/>
+		<Button class="BoxButton" id="l3" text="BOX 3" press="loadBox"/>
+		<Button class="BoxButton" id="l4" text="BOX 4" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent03">
-		<Button class="BoxButton5" id="l5" text="BOX 5" press="loadBox"/>
-		<Button class="BoxButton6" id="l6" text="BOX 6" press="loadBox"/>
+		<Button class="BoxButton" id="l5" text="BOX 5" press="loadBox"/>
+		<Button class="BoxButton" id="l6" text="BOX 6" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent04">
-		<Button class="BoxButton7" id="l7" text="BOX 7" press="loadBox"/>
-		<Button class="BoxButton8" id="l8" text="BOX 8" press="loadBox"/>
+		<Button class="BoxButton" id="l7" text="BOX 7" press="loadBox"/>
+		<Button class="BoxButton" id="l8" text="BOX 8" press="loadBox"/>
 	</f:SimpleForm>
 	
 </mvc:View>
