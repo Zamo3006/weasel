@@ -76,8 +76,6 @@ sap.ui.define([
 
 		resetRouteButtonPressed: function(oEvent) {
 			//this.getSfas();
-			console.log(sap.ui.getCore().AppContext.boxes);
-			console.log(sap.ui.getCore().AppContext.stations);
 			console.log(sap.ui.getCore().AppContext.route);
 		},
 
