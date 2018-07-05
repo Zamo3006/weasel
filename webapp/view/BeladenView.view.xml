@@ -6,8 +6,8 @@
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
 	id="BoxesButtonsContent01">
-		<Button class="BoxButton1" id="l1" text="BOX 1" press="loadBox"/>
-		<Button class="BoxButton2" id="l2" text="BOX 2" press="loadBox"/>
+		<Button class="BoxButton" id="l1" text="BOX 1" press="loadBox"/>
+		<Button class="BoxButton" id="l2" text="BOX 2" press="loadBox"/>
 	</f:SimpleForm>
 	<f:SimpleForm 
 	class="BoxesButtonsContent"
