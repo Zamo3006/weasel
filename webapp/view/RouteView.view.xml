@@ -2,30 +2,19 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:l="sap.ui.layout" 
 	xmlns:f="sap.ui.layout.form" >
-	<f:SimpleForm 
-	class="Tabelle"
-	id="Tabelle">
-	<Table id="Route" items="{}">
-		 			<columns>
-			<Column
-				width="20%">
-				<Text text="Typ" />
-			</Column>
-			<Column
-				width="20%"
-				demandPopin="true">
-				<Text text="Nummer" />
-			</Column>
-			</columns>
-						<items>
-							<ColumnListItem>
-								<cells>
-									<Text text="{Typ}"/>
-									<Text text="{Nummer}"/>
-								</cells>
-							</ColumnListItem>
-						</items>
-					</Table>
-					</f:SimpleForm>
+
+<f:SimpleForm class="Route" id="routeContent">
+<Button class="StartButton"
+						id="LoadTextButton"
+						text="Load Route"
+						press="fillTextButtonPressed" />
+	<TextArea
+		id="RouteText"
+		editable="false"
+		value="empty"
+	>
+	</TextArea>
+	</f:SimpleForm>
+
 	
 </mvc:View>
