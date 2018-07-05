@@ -1,4 +1,3 @@
-
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
@@ -9,8 +8,19 @@ sap.ui.define([
 ], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
 	"use strict";
-
+	
 	return Controller.extend("weasel.challenge.controller.StartView", {
+
+		loadButtonColors: function(oEvent) {
+			var key = oEvent.getParameter("key");
+			if (key == "Beladen") {
+
+			} else if (key == "Entladen") {
+
+			} else if (key == "Route") {
+				this.fillTextButtonPressed(oEvent);
+			}
+		},
 
 		startButtonPressed: function(oEvent) {
 			this.startChallenge();
@@ -54,40 +64,40 @@ sap.ui.define([
 				KnotenVon: 11
 			}];
 		},
-		
-		fillTextButtonPressed: function(oEvent){
-			var field = this.byId("RouteText");
-			var text  = "";
+
+		fillTextButtonPressed: function(oEvent) {
+			var field =sap.ui.getCore().byId("__xmlview5--RouteText");
+			var text = "";
 			var route = sap.ui.getCore().AppContext.route;
-			for(var c = 0; c < route.length; ++c){
-				text += route[c].Typ+" "+route[c].Nr+"\n";
+			for (var c = 0; c < route.length; ++c) {
+				text += route[c].Typ + " " + route[c].Nr + "\n";
 			}
 			field.setValue(text);
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			if(position != 10 && position != 9){
+			if (position != 10 && position != 9) {
 				MessageToast.show("Invalid startpoint", {
 					duration: 5000
 				});
-			}else{
-				if(!this.test){
-				this.getSfas();
-				this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
-				}else{
+			} else {
+				if (!this.test) {
+					this.getSfas();
+					this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
+				} else {
 					this.testBoxes();
 					this.findSfa(this.testBoxesArray, this.teamBox);
 				}
 				this.routingFunction(position);
 				var message = "Calcualting route finished";
-				if(this.test){
+				if (this.test) {
 					message += " with test data";
 				}
-					MessageToast.show(message, {
+				MessageToast.show(message, {
 					duration: 5000
 				});
-				
+
 			}
 
 		},
@@ -108,7 +118,7 @@ sap.ui.define([
 		},
 
 		scanBoxBeladenPressed: function(oEvent) {
-		
+
 		},
 
 		scanBoxEntladenPressed: function(oEvent) {
@@ -188,86 +198,77 @@ sap.ui.define([
 			sap.ui.getCore().AppContext.boxes = boxes;
 			sap.ui.getCore().AppContext.stations = stations;
 		},
-		
+
 		loadBox: function(oEvent) {
 			sap.ui.getCore().AppContext.bgColor = "blue";
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-		
-			
-				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
-					var box = sap.ui.getCore().AppContext.boxes[boxId];
-					if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined){
-						var station = sap.ui.getCore().AppContext.stations[box.Station];
-			console.log(station);
-			if (station.NumberOfBoxes > 0) {
-				station.NumberOfBoxes--;	
-				station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
-				document.getElementById("__xmlview3--l"+ boxId +"-inner").style.backgroundColor="green";
-				document.getElementById("__xmlview3--l"+ boxId +"-inner").style.backgroundColor="!important";
-				sap.ui.getCore().AppContext.bgColor = "green";
-				console.log(sap.ui.getCore().AppContext.stations);
-				console.log(sap.ui.getCore().AppContext.boxes);
-				
-			} else {
-				MessageToast.show("Station " + station.NR + "does not contain a box with index " + boxId + ".", {
-						duration: 5000
-					});
-			}
+
+			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
+				var box = sap.ui.getCore().AppContext.boxes[boxId];
+				if (sap.ui.getCore().AppContext.stations[box.Station] !== undefined) {
+					var station = sap.ui.getCore().AppContext.stations[box.Station];
+					console.log(station);
+					if (station.NumberOfBoxes > 0) {
+						station.NumberOfBoxes--;
+						station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
+						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "green";
+						document.getElementById("__xmlview3--l" + boxId + "-inner").style.backgroundColor = "!important";
+						sap.ui.getCore().AppContext.bgColor = "green";
+						console.log(sap.ui.getCore().AppContext.stations);
+						console.log(sap.ui.getCore().AppContext.boxes);
+
+					} else {
+						MessageToast.show("Station " + station.NR + "does not contain a box with index " + boxId + ".", {
+							duration: 5000
+						});
 					}
-					else{
-							MessageToast.show("No box with index " + boxId + " found.", {
-						duration: 5000
-					});
-					}
-				}
-				else{
+				} else {
 					MessageToast.show("No box with index " + boxId + " found.", {
 						duration: 5000
 					});
-					
 				}
+			} else {
+				MessageToast.show("No box with index " + boxId + " found.", {
+					duration: 5000
+				});
+
+			}
 			box.loaded = 1;
 		},
-		
+
 		BeladenViewTabClicked: function(oEvent) {
 			console.log("Methode BeladenViewTabClicked aufgerufen");
 			var stations = sap.ui.getCore().AppContext.stations;
-			for (var index = 0; index < stations.length; ++index){
-				for (var i = 0; index < stations.Boxes.length; ++index){
-					if (stations[index].Boxes[i].loaded == 1){
-						document.getElementById("__xmlview3--l"+ (index + 1) +"-inner").style.backgroundColor="green";
+			for (var index = 0; index < stations.length; ++index) {
+				for (var i = 0; index < stations.Boxes.length; ++index) {
+					if (stations[index].Boxes[i].loaded == 1) {
+						document.getElementById("__xmlview3--l" + (index + 1) + "-inner").style.backgroundColor = "green";
+					} else {
+						if (stations[index].Boxes[i].Station == 16) {
+							document.getElementById("__xmlview3--l" + (index + 1) + "-inner").disabled = true;
+						}
 					}
-					else{
-					if (stations[index].Boxes[i].Station == 16){
-						document.getElementById("__xmlview3--l"+ (index + 1) +"-inner").disabled = true;
-					}
-				}
 				}
 			}
-				
-				
-			
-			 
+
 		},
-		
+
 		unloadBox: function(oEvent) {
 
-						var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-		
-			
-				if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined){
-					var box = sap.ui.getCore().AppContext.boxes[boxId];
-			
+			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
+
+			if (sap.ui.getCore().AppContext.boxes[boxId] !== undefined) {
+				var box = sap.ui.getCore().AppContext.boxes[boxId];
+
 				var pos = sap.ui.getCore().AppContext.nextPosition;
 				console.log(pos);
-				
-				if (pos !== undefined){
+
+				if (pos !== undefined) {
 					sap.ui.getCore().AppContext.stations[pos].Boxes.push(boxId);
 					sap.ui.getCore().AppContext.stations[pos].NumberOfBoxes++;
 					box.Station = pos;
-					
-				}
-				else{
+
+				} else {
 					sap.ui.getCore().AppContext.stations[16].Boxes.push(boxId)
 					sap.ui.getCore().AppContext.stations[16].NumberOfBoxes++;
 					box.Station = 16;
@@ -275,17 +276,16 @@ sap.ui.define([
 				console.log(sap.ui.getCore().AppContext.stations);
 				console.log(sap.ui.getCore().AppContext.boxes);
 
-				}
-				else{
-					MessageToast.show("No box with index " + boxId + " found.", {
-						duration: 5000
-					});
-					
-				}
+			} else {
+				MessageToast.show("No box with index " + boxId + " found.", {
+					duration: 5000
+				});
+
+			}
 			box.loaded = 0;
 
 		},
-		
+
 		boxButtonPickPressed: function(oEvent) {
 
 			this.findSfa(sap.ui.getCore().AppContext.Sfas, "Kiste-2");
@@ -488,15 +488,15 @@ sap.ui.define([
 			var route = [];
 
 			//Helper Functions
-			function removeEmpty(){
-				for(var e = evenLvlTwos.length -1 ; e >= 0; --e){
-					if(evenLvlTwos[e].Boxes.length == 0){
-						evenLvlTwos.splice(e,1);
+			function removeEmpty() {
+				for (var e = evenLvlTwos.length - 1; e >= 0; --e) {
+					if (evenLvlTwos[e].Boxes.length == 0) {
+						evenLvlTwos.splice(e, 1);
 					}
 				}
-				for(var u = unevenLvlTwos.length-1; u >= 0; --u){
-					if(unevenLvlTwos[u].Boxes.length == 0){
-						unevenLvlTwos.splice(u,1);
+				for (var u = unevenLvlTwos.length - 1; u >= 0; --u) {
+					if (unevenLvlTwos[u].Boxes.length == 0) {
+						unevenLvlTwos.splice(u, 1);
 					}
 				}
 			}
@@ -548,7 +548,7 @@ sap.ui.define([
 				route.push({
 					Typ: "Drive",
 					Nr: selectedOne.NR,
-					H : "take"
+					H: "take"
 				});
 				currentStation = selectedOne;
 				var l = currentBoxes.length;
@@ -583,7 +583,7 @@ sap.ui.define([
 				}
 				removeEmpty();
 			}
-			
+
 			//startingPoint 10, right
 			function startTen() {
 				route.push({
@@ -627,12 +627,15 @@ sap.ui.define([
 			//decide next lvl 1 station
 			function findLevelTwo() {
 				var next;
-				if(evenLvlTwos.length > 0){
+				if (evenLvlTwos.length > 0) {
 					next = evenLvlTwos[0];
-				}else if(unevenLvlTwos.length > 0){
+				} else if (unevenLvlTwos.length > 0) {
 					next = unevenLvlTwos[0];
 				}
-				route.push({Typ: "Drive", Nr: next.NR});
+				route.push({
+					Typ: "Drive",
+					Nr: next.NR
+				});
 				currentStation = next;
 				pickBoxes();
 			}
@@ -699,8 +702,8 @@ sap.ui.define([
 				updateFinished();
 			}
 			takeToTarget();
-			
-			sap.ui.getCore().AppContext.route = route; 
+
+			sap.ui.getCore().AppContext.route = route;
 		}
 	});
 });

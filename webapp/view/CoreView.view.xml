@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="weasel.challenge.controller.CoreView" 
+	controllerName="weasel.challenge.controller.StartView" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns:l="sap.ui.layout" 
@@ -15,7 +15,8 @@
 					class="sapUiResponsiveContentPadding"
 					expandable = "false"
 					stretchContentHeight="true"
-					select = "loadButtonColors">
+					select = "loadButtonColors"
+					>
 					<items>
 						<IconTabFilter
 							key="Start"
