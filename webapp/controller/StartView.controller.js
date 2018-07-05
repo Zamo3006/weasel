@@ -182,7 +182,18 @@ sap.ui.define([
 		},
 
 		scanBoxEntladenPressed: function(oEvent) {
-
+		//herausfinden der sfanr. von der box
+		//aufrufen der mehtode setdownsfa mit box sfanr. 
+		
+		if (sap.ui.getCore().AppContext.nextPosition == 16){
+			var boxName = sap.ui.getCore().AppContext.scanResult;
+		boxName = boxName.substring(boxName.length - 1);
+		this.setdownSfa(sap.ui.getCore().AppContext.boxes[boxName].id);
+		
+		var text = this.byId("NumberOfBoxesText");
+		text.setText("Delivered boxes: " + text.substring(text.length - 1) + 1);
+		}
+		
 		},
 
 		scanButtonPressed: function(oEvent) {
