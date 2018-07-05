@@ -4,7 +4,7 @@
 	xmlns:f="sap.ui.layout.form" > 
 	<App>
 		<pages>
-			<Page title="{i18n>GO TO RFID}">
+			<Page title="start" showHeader="false">
 				<f:SimpleForm
 				class="container1"
 				id="container1">
@@ -22,8 +22,8 @@
 				id="container2">
 					<Button class = "ResetRouteButton"
 					id = "ResetRouteButton"
-					text = "RESET ROUTE"
-					press = "resetRouteButtonPressed" />
+					text = "LOAD SFAS"
+					press = "loadSfasButtonPressed" />
 					<Button class = "CalculateRouteButton"
 					id = "CalculateRouteButton"
 					text = "CALCULATE ROUTE"
