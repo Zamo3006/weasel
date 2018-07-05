@@ -345,7 +345,7 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
-		//DO SOMETHING!
+		//DOES SOMETHING!
 		routingFunction: function(start) {
 
 			//station {nr, Boxes, #Boxes, Lvl)
