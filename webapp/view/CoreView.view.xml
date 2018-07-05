@@ -29,13 +29,15 @@
 						</IconTabFilter>
 						<IconTabFilter
 							key="Beladen"
-							text="Beladen">
+							text="Beladen"
+							select="BeladenViewTabClicked">
 							<mvc:XMLView viewName="weasel.challenge.view.BeladenView"/>
 						
 						</IconTabFilter>
 						<IconTabFilter
 							key="Entladen"
-							text="Entladen">
+							text="Entladen"
+							select="EntladenViewTabClicked">
 							<mvc:XMLView viewName="weasel.challenge.view.EntladenView"/>
 						</IconTabFilter>
 						<IconTabFilter

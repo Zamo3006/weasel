@@ -10,7 +10,7 @@ sap.ui.define([
 	"use strict";
 	
 	return Controller.extend("weasel.challenge.controller.StartView", {
-
+	
 		startButtonPressed: function(oEvent) {
 			this.startChallenge();
 		},
@@ -205,8 +205,10 @@ sap.ui.define([
 			console.log(sap.ui.getCore().AppContext.boxes);
 		},
 
+		
+		
 		loadBox: function(oEvent) {
-			
+			sap.ui.getCore().AppContext.bgColor = "blue";
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
 		
 			
@@ -218,6 +220,9 @@ sap.ui.define([
 			if (station.NumberOfBoxes > 0) {
 				station.NumberOfBoxes--;	
 				station.Boxes.splice(station.Boxes.indexOf(boxId), 1);
+				document.getElementById("__xmlview3--l"+ boxId +"-inner").style.backgroundColor="green";
+				document.getElementById("__xmlview3--l"+ boxId +"-inner").style.backgroundColor="!important";
+				sap.ui.getCore().AppContext.bgColor = "green";
 				console.log(sap.ui.getCore().AppContext.stations);
 				console.log(sap.ui.getCore().AppContext.boxes);
 				
@@ -240,6 +245,27 @@ sap.ui.define([
 					
 				}
 			box.loaded = 1;
+		},
+		
+		BeladenViewTabClicked: function(oEvent) {
+			console.log("Methode BeladenViewTabClicked aufgerufen");
+			var stations = sap.ui.getCore().AppContext.stations;
+			for (var index = 0; index < stations.length; ++index){
+				for (var i = 0; index < stations.Boxes.length; ++index){
+					if (stations[index].Boxes[i].loaded == 1){
+						document.getElementById("__xmlview3--l"+ (index + 1) +"-inner").style.backgroundColor="green";
+					}
+					else{
+					if (stations[index].Boxes[i].Station == 16){
+						document.getElementById("__xmlview3--l"+ (index + 1) +"-inner").disabled = true;
+					}
+				}
+				}
+			}
+				
+				
+			
+			 
 		},
 		
 		unloadBox: function(oEvent) {
