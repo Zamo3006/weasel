@@ -472,8 +472,7 @@ sap.ui.define([
 			function startTen() {
 				route.push({
 					Typ: "Drive",
-					Nr: unselectedOne.NR,
-					H: "ten1"
+					Nr: unselectedOne.NR
 				});
 				currentStation = unselectedOne;
 				pickBoxes();
@@ -482,7 +481,6 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: next.NR
-						,H: "ten2"
 					});
 					currentStation = next;
 					pickBoxes();
@@ -496,14 +494,12 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: 11
-						,H: "nine1"
 					});
 					currentStation = stations[11];
 				} else {
 					route.push({
 						Typ: "Drive",
 						Nr: 12
-						,H:"nine2"
 					});
 					currentStation = stations[12];
 				}
@@ -520,7 +516,7 @@ sap.ui.define([
 				}else if(unevenLvlTwos.length > 0){
 					next = unevenLvlTwos[0];
 				}
-				route.push({Typ: "Drive", Nr: next.NR, H: "findlvl2"});
+				route.push({Typ: "Drive", Nr: next.NR});
 				currentStation = next;
 				pickBoxes();
 			}
@@ -537,7 +533,6 @@ sap.ui.define([
 					route.push({
 						Typ: "Drive",
 						Nr: selectedOne.NR
-						,H:"target1"
 					});
 					currentStation = selectedOne;
 				}
