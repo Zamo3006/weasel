@@ -61,9 +61,9 @@ sap.ui.define([
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
 			this.getView().getModel("test").create(
-				"Customer(Kdnr='"+position+"')", {
+				"Customer(Kdnr='" + position + "')", {
 					"Hinweis": "two"
-				},  {
+				}, {
 					success: function() {
 						MessageToast.show("wrote stuff", {
 							duration: 5000
@@ -81,21 +81,20 @@ sap.ui.define([
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
-			this.getView().getModel("test").read("/Customer", {
-				success: function(data) {
-					MessageToast.show("read stuff", {
-						duration: 5000
-					});
-				},
-				error: function(e) {
-					MessageToast.show(e, {
-						duration: 5000
-					});
-				},
-				async: true
-			}, null, null, true);
-			//this.getSfas();
-			//console.log(sap.ui.getCore().AppContext.Sfas);
+			/*	this.getView().getModel("test").read("/Customer", {
+					success: function(data) {
+						MessageToast.show("read stuff", {
+							duration: 5000
+						});
+					},
+					error: function(e) {
+						MessageToast.show(e, {
+							duration: 5000
+						});
+					},
+					async: true
+				}, null, null, true);*/
+			this.getSfas();
 		},
 
 		goToRfidTagButtonPressed: function(oEvent) {
@@ -305,8 +304,6 @@ sap.ui.define([
 			}, null, null, true);
 		},
 
-		
-
 		setSfaStatus: function(sfa, status) {
 			this.getView().getModel("challenge").update(
 				"/SfaStatus(Sfanr='" + sfa + "')", {
@@ -373,18 +370,20 @@ sap.ui.define([
 			var boxes;
 			//station {nr, Boxes, #Boxes, Lvl)
 			var stations;
+			//Lvl 1 station to collect boxes
+			var selectedOne;
+			//other lvl 1 statin
+			var unselectedOne;
 			//need for sorting in LvL1
-			var sortingNecessary = 0;
+			var sortingNecessary;
 			//sorting possible while fetching
-			var sortingPossible = 1;
+			var sortingPossible = 0;
 			//all boxes at lvl 1 stations
 			var fetchFinished = 0;
-			//# of next box to bring to target
-			var nextToTarget = 1;
-			//# of lvl2 stations with even # of boxes
-			var evenLvlTwos;
-			//# of lvl2 stations with uneven # of boxes
-			var unevenLvlTwos;
+			//lvl 2 stations with even # of Boxes
+			var evenLvlTwos = [];
+			//lvl2 stations with uneven # of boxes
+			var unevenLvlTwos = [];
 			//currently loaded boxes
 			var currentBoxes = [];
 			//current station
@@ -393,32 +392,48 @@ sap.ui.define([
 			var route = [];
 
 			//Helper Functions
-
-			function isLevelTwo(station) {
-				return station.Level == 2;
+			function removeEmpty(){
+				for(var e = evenLvlTwos.length -1 ; e >= 0; --e){
+					if(evenLvlTwos[e].Boxes.length == 0){
+						evenLvlTwos.splice(e,1);
+					}
+				}
+				for(var u = unevenLvlTwos.length; u >= 0; --u){
+					if(unevenLvlTwos[u].Boxes.length == 0){
+						unevenLvlTwos.splice(u,1);
+					}
+				}
+			}
+			//select lvl one station to put boxes add
+			function selectLevelOne() {
+				if (stations[13].NumberOfBoxes > stations[14].NumberOfBoxes) {
+					selectedOne = stations[13];
+					unselectedOne = stations[14];
+				} else {
+					selectedOne = stations[14];
+					unselectedOne = stations[13];
+				}
 			}
 
-			function isLevelOne(station) {
-				return station.Level == 1;
-			}
-			
-		
-			function findBox(station, number){
-				return station.boxes.contains(number);
-			}
-
-			//update sorting necessity
-			function updateSorting() {
-				if (unevenLvlTwos > 0) {
+			//uneven lvl2 stations
+			function findUnevenLevelTwos() {
+				if (stations[11].NumberOfBoxes % 2 != 0) {
+					unevenLvlTwos.push(stations[11]);
 					sortingPossible = 1;
 				} else {
-					sortingPossible = 0;
+					evenLvlTwos.push(stations[11]);
 				}
-				//TODO
-				if (true) {
-					sortingNecessary = 1;
+				if (stations[12].NumberOfBoxes % 2 != 0) {
+					unevenLvlTwos.push(stations[12]);
+					sortingPossible = 1;
 				} else {
-					sortingNecessary = 0;
+					evenLvlTwos.push(stations[12]);
+				}
+				if (stations[15].NumberOfBoxes % 2 != 0) {
+					unevenLvlTwos.push(stations[15]);
+					sortingPossible = 1;
+				} else {
+					evenLvlTwos.push(stations[15]);
 				}
 			}
 
@@ -426,59 +441,165 @@ sap.ui.define([
 			function init() {
 				boxes = sap.ui.getCore().AppContext.boxes;
 				stations = sap.ui.getCore().AppContext.stations;
-
-				function even(station) {
-					return station.NumberOfBoxes % 2 == 0;
+				selectLevelOne();
+				if (unselectedOne.NumberOfBoxes % 2 == 1) {
+					sortingNecessary = 1;
 				}
-				evenLvlTwos = stations.filter(isLevelTwo).filter(even).length;
-				unevenLvlTwos = 3 - evenLvlTwos;
-				updateSorting();
+				findUnevenLevelTwos();
+				currentStation = start;
+			}
+
+			function takeToLevelOne() {
+				route.push({
+					Typ: "Drive",
+					Nr: selectedOne.NR
+				});
+				currentStation = selectedOne;
+				for (var o = 0; o < currentBoxes.length; ++o) {
+					var box = currentBoxes.pop();
+					route.push({
+						Typ: "Unload",
+						Nr: box.Nr
+					});
+					selectedOne.Boxes.push(box.Nr);
+				}
 			}
 
 			//decide which boxes to pick
 			function pickBoxes() {
-
+				var box;
+				if (currentBoxes.length < 2) {
+					box = currentStation.boxes.pop();
+					currentBoxes.push(box);
+					route.push({
+						Typ: "Load",
+						Nr: box.Nr
+					});
+					if (currentBoxes.length == 1 && currentStation.boxes.length > 0) {
+						box = currentStation.boxes.pop();
+						currentBoxes.push(box);
+						route.push({
+							Typ: "Load",
+							Nr: box.Nr
+						});
+					}
+				}
+				removeEmpty();
 			}
+			
+			//startingPoint 10, right
+			function startTen() {
+				route.push({
+					Typ: "Drive",
+					Nr: unselectedOne.NR
+				});
+				currentStation = unselectedOne;
+				pickBoxes();
+				if (sortingNecessary && sortingPossible) {
+					var next = unevenLvlTwos[0];
+					route.push({
+						Typ: "Drive",
+						Nr: next.NR
+					});
+					currentStation = next;
+					pickBoxes();
+				}
+				takeToLevelOne();
+			}
+
+			//startingPoint 9, left
+			function startNine() {
+				if (stations[11].NumberOfBoxes > stations[12].NumberOfBoxes) {
+					route.push({
+						Typ: "Drive",
+						Nr: 11
+					});
+					currentStation = stations[11];
+				} else {
+					route.push({
+						Typ: "Drive",
+						Nr: 12
+					});
+					currentStation = stations[12];
+				}
+				pickBoxes();
+				takeToLevelOne();
+				startTen();
+			}
+
 			//decide next lvl 1 station
 			function findLevelTwo() {
+				var next;
+				if(evenLvlTwos.length > 0){
+					next = evenLvlTwos[0];
+				}else if(unevenLvlTwos.length > 0){
+					next = unevenLvlTwos[0];
+				}
+				route.push({Typ: "Drive", Nr: next.NR});
+				currentStation = next;
 				pickBoxes();
-			}
-
-			//decide next lvl 2 station
-			function findLevelOne() {
-				pickBoxes();
+				takeToLevelOne();
 			}
 
 			function updateFinished() {
-				if ((stations[13].NumberOfBoxes + stations[14].NumberOfBoxes) == 8) {
+				if (selectedOne.Boxes.length == 8) {
 					fetchFinished = 1;
 				}
 			}
 
 			//take boxes to target
 			function takeToTarget() {
-				for(var i = 1; i<=8;++i){
-					var next = stations.find(function(station){return findBox(station,i);});
-					if(next != currentStation){
-						if(currentStation.Level == 0){
-							route.push({Typ: "drive", Nr: next });
-							currentStation = next;
-						}else{
-							route.push({Typ: "drive", Nr: 16});
-							rout.pus({Typ: "unload", Nr: currentBoxes.pop().boxNr})
+				if (currentStation != selectedOne) {
+					route.push({
+						Typ: "Drive",
+						Nr: selectedOne.NR
+					});
+					currentStation = selectedOne;
+				}
+				for (var o = 1; o < 9; ++o) {
+					if (o % 2 == 1) {
+						route.push({
+							Typ: "Load",
+							Nr: o
+						});
+						route.push({
+							Typ: "Load",
+							Nr: o + 1
+						});
+						route.push({
+							Typ: "Drive",
+							Nr: 16
+						});
+					} else {
+						route.push({
+							Typ: "Unload",
+							Nr: o - 1
+						});
+						route.push({
+							Typ: "Unload",
+							Nr: o
+						});
+						if (o != 8) {
+							route.push({
+								Typ: "Drive",
+								Nr: selectedOne.NR
+							});
 						}
 					}
-					route.push({Typ: "load", Nr: i});
 				}
 			}
 
 			//routing
 			init();
+			if (currentStation == 9) {
+				startNine();
+			} else {
+				startTen();
+			}
 			//loop transport boxes to lvl1 stations
 			while (!fetchFinished) {
-				updateSorting();
 				findLevelTwo();
-				findLevelOne();
+				takeToLevelOne();
 				updateFinished();
 			}
 			takeToTarget();
