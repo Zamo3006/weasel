@@ -26,74 +26,59 @@ sap.ui.define([
 			}, {
 				Ladetraeger: "Kiste-22",
 				Sfanr: 7322,
-				KnotenVon: 13
+				KnotenVon: 11
 			}, {
 				Ladetraeger: "Kiste-23",
 				Sfanr: 7323,
-				KnotenVon: 13
+				KnotenVon: 12
 			}, {
 				Ladetraeger: "Kiste-24",
 				Sfanr: 7334,
-				KnotenVon: 13
+				KnotenVon: 14
 			}, {
 				Ladetraeger: "Kiste-25",
 				Sfanr: 7325,
-				KnotenVon: 13
+				KnotenVon: 15
 			}, {
 				Ladetraeger: "Kiste-26",
 				Sfanr: 7326,
-				KnotenVon: 13
+				KnotenVon: 15
 			}, {
 				Ladetraeger: "Kiste-27",
 				Sfanr: 7327,
-				KnotenVon: 13
+				KnotenVon: 11
 			}, {
 				Ladetraeger: "Kiste-28",
 				Sfanr: 7328,
-				KnotenVon: 13
+				KnotenVon: 12
 			}, {
 				Ladetraeger: "Kiste-11",
 				Sfanr: 7329,
-				KnotenVon: 13
+				KnotenVon: 15
 			}];
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
 			var position = this.byId("RfidTagInput").getValue();
-			this.getView().getModel("test").create(
-				"Customer(Kdnr='" + position + "')", {
-					"Hinweis": "two"
-				}, {
-					success: function() {
-						MessageToast.show("wrote stuff", {
-							duration: 5000
-						});
-					},
-					error: function(e) {
-						MessageToast.show(e, {
-							duration: 5000
-						});
-					},
-					async: true
+			var test = 1;
+			if(position != 10 && position != 9){
+				MessageToast.show("Invalid startpoint", {
+					duration: 5000
+				});
+			}else{
+				if(!test){
+				this.getSfas();
+				this.findSfa(sap.ui.getCore().AppContext.Sfas, this.teamBox);
+				}else{
+					this.testBoxes();
+					this.findSfa(this.testBoxesArray, this.teamBox);
 				}
-			);
+				this.routingFunction(position);
+			}
 
 		},
 
 		resetRouteButtonPressed: function(oEvent) {
-			/*	this.getView().getModel("test").read("/Customer", {
-					success: function(data) {
-						MessageToast.show("read stuff", {
-							duration: 5000
-						});
-					},
-					error: function(e) {
-						MessageToast.show(e, {
-							duration: 5000
-						});
-					},
-					async: true
-				}, null, null, true);*/
 			this.getSfas();
 		},
 
