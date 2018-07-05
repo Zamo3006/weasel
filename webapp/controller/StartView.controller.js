@@ -8,10 +8,11 @@ sap.ui.define([
 ], function(Controller, Filter, FilterOperator, BarcodeScanner,
 	MessageToast) {
 	"use strict";
-	
+
 	return Controller.extend("weasel.challenge.controller.StartView", {
 
 		loadButtonColors: function(oEvent) {
+			this.updateTextFields();
 			var key = oEvent.getParameter("key");
 			console.log(key);
 			if (key == "Beladen" || key == "Entladen") {
@@ -86,13 +87,52 @@ sap.ui.define([
 		},
 
 		fillTextButtonPressed: function(oEvent) {
-			var field =sap.ui.getCore().byId("__xmlview5--RouteText");
+			var field = sap.ui.getCore().byId("__xmlview5--RouteText");
 			var text = "";
 			var route = sap.ui.getCore().AppContext.route;
 			for (var c = 0; c < route.length; ++c) {
 				text += route[c].Typ + " " + route[c].Nr + "\n";
 			}
 			field.setValue(text);
+			field.setRows(7);
+		},
+
+		updateTextFields: function() {
+			var fields = [sap.ui.getCore().byId("__xmlview2--RouteText2"), sap.ui.getCore().byId("__xmlview3--RouteText3"), sap.ui.getCore().byId(
+				"__xmlview4--RouteText4"), sap.ui.getCore().byId("__xmlview5--RouteText")];
+			var text = "";
+			var route = sap.ui.getCore().AppContext.route;
+			for (var c = 0; c < route.length; ++c) {
+				text += route[c].Typ + " " + route[c].Nr + "\n";
+			}
+			for (var f = 0; f < fields.length; ++f) {
+				fields[f].setValue(text);
+				if (fields[f] == "__xmlview5--RouteText") {
+					fields[f].setRows(10);
+				} else {
+					fields[f].setRows(5);
+				}
+			}
+		},
+
+		nextPosPressed: function(oEvent) {
+			var route = sap.ui.getCore().AppContext.route;
+			var index = 0;
+			while (route[index].Typ != "Drive") {
+				index++;
+			}
+			sap.ui.getCore().AppContext.nextTarget = route[index].Nr;
+			this.sendWeaselToPosition(sap.ui.getCore().AppContext.nextTarget);
+			route.splice(0, index + 1);
+			sap.ui.getCore().AppContext.route = route;
+			this.updateTextFields();
+		},
+
+		skipStepButtonPressed: function(oEvent) {
+			var route = sap.ui.getCore().AppContext.route;
+			route.splice(0, 1);
+			sap.ui.getCore().AppContext.route = route;
+			this.fillTextButtonPressed(oEvent);
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {

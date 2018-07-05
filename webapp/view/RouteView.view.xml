@@ -1,20 +1,10 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="weasel.challenge.controller.StartView"
-	xmlns:html="http://www.w3.org/1999/xhtml"
-	xmlns:l="sap.ui.layout" 
-	xmlns:f="sap.ui.layout.form" >
-
-<f:SimpleForm class="Route" id="routeContent">
-<Button class="StartButton"
-						id="LoadTextButton"
-						text="Load Route"
-						press="fillTextButtonPressed" />
-	<TextArea
-		id="RouteText"
-		editable="false"
-		value="empty"
-	>
-	</TextArea>
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+	<f:SimpleForm class="Route" id="routeContent">
+		<Button class="StartButton" id="LoadTextButton" text="Load Route" press="fillTextButtonPressed"/>
+		<Button class="StopButton" id="SkipButton" text="Skip Step" press="skipStepButtonPressed"/>
 	</f:SimpleForm>
-
-	
+	<f:SimpleForm class="Route" id="routeContent1">
+		<TextArea id="RouteText" editable="false" value="empty"></TextArea>
+	</f:SimpleForm>
 </mvc:View>

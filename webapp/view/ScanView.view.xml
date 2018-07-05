@@ -18,7 +18,8 @@
 	<f:SimpleForm 
 	class="NextPos"
 	id="NextPos">
-		<Button class="NextPosi" id="NextPosi3" text="Next Pos" press="NextPosPressed"/>
+		<Button class="NextPosi" id="NextPosi3" text="Next Pos" press="nextPosPressed"/>
+		<TextArea id="RouteText2" editable="false" value="empty"></TextArea>
 	</f:SimpleForm>
 		
 
