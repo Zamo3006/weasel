@@ -114,7 +114,7 @@ sap.ui.define([
 			sap.ui.getCore().AppContext.route = route;
 			this.updateTextFields();
 			sap.ui.getCore().AppContext.nextPosition = sap.ui.getCore().AppContext.nextTarget;
-			MessageToast.show("Send Weasel to " + sap.ui.getCore().AppContext.nextTarget + "...not", {
+			MessageToast.show("Updated Weaselposition to " + sap.ui.getCore().AppContext.nextTarget , {
 				duration: 5000
 			});
 		},
