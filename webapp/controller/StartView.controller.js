@@ -87,7 +87,7 @@ sap.ui.define([
 					fields[f].setRows(5);
 				}
 			}
-			sap.ui.getCore().byId("__xmlview2--textCount").setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
+			sap.ui.getCore().byId("__xmlview2--textCount").setText("Delivered: " + sap.ui.getCore().AppContext.atTarget.length);
 		},
 
 		nextPosPressed: function(oEvent) {
@@ -127,15 +127,16 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-		/*	var b = sap.ui.getCore().AppContext.boxes.filter(function(n) {
+			var b = sap.ui.getCore().AppContext.boxes.filter(function(n) {
 				return n;
 			}).length;
 			if (b < 8) {
 				MessageToast.show("Only " + b + " Boxes found!", {
 					Duration: 5000
 				});
-			} else {*/
-				sap.ui.getCore().AppContext.atTarget = 0;
+
+			} else {
+				sap.ui.getCore().AppContext.atTarget = [];
 				var position = this.byId("RfidTagInput").getValue();
 				if (position != 10 && position != 9) {
 					MessageToast.show("Invalid startpoint", {
@@ -159,7 +160,7 @@ sap.ui.define([
 					});
 
 				}
-			//}
+			}
 		},
 
 		loadSfasButtonPressed: function(oEvent) {
@@ -217,8 +218,8 @@ sap.ui.define([
 							sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
 						}
 						if (sap.ui.getCore().AppContext.nextPosition == 16) {
-							sap.ui.getCore().AppContext.atTarget++;
-							counter.setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
+							sap.ui.getCore().AppContext.atTarget.push(task.Nr);
+							counter.setText("Delivered: " + sap.ui.getCore().AppContext.atTarget.length);
 							var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
 							controller.setdownSfa(sfanr);
 						}
@@ -324,7 +325,7 @@ sap.ui.define([
 					sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
 				}
 				if (sap.ui.getCore().AppContext.nextPosition == 16) {
-					sap.ui.getCore().AppContext.atTarget++;
+					sap.ui.getCore().AppContext.atTarget.push(task.Nr);
 					var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
 					this.setdownSfa(sfanr);
 				}
@@ -337,7 +338,7 @@ sap.ui.define([
 
 		unloadBox: function(oEvent) {
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			sap.ui.getCore().AppContext.atTarget++;
+			sap.ui.getCore().AppContext.atTarget.push(boxId);
 			var sfanr = sap.ui.getCore().AppContext.boxes[boxId].Id;
 			this.setdownSfa(sfanr);
 			this.updateTextFields();
@@ -350,9 +351,9 @@ sap.ui.define([
 			this.team = 2;
 			this.teamBox = "Kiste-2";
 			this.skipSlow = 1;
-			sap.ui.getCore().AppContext.atTarget = 0;
+			sap.ui.getCore().AppContext.atTarget = [];
 			//TODO NEED TO CHANGE THIS!!!!!
-			this.test = 1;
+			this.test = 0;
 		},
 
 		// get current status of weasel
@@ -672,7 +673,7 @@ sap.ui.define([
 				} else if (unevenLvlTwos.length > 0) {
 					next = unevenLvlTwos[0];
 				}
-				if (skipSlow && next.Nr == 15) {
+				if (skipSlow && next.NR == 15) {
 					route.push({
 						Typ: "Drive",
 						Nr: 3
