@@ -114,7 +114,7 @@ sap.ui.define([
 			sap.ui.getCore().AppContext.route = route;
 			this.updateTextFields();
 			sap.ui.getCore().AppContext.nextPosition = sap.ui.getCore().AppContext.nextTarget;
-			MessageToast.show("Updated Weaselposition to " + sap.ui.getCore().AppContext.nextTarget , {
+			MessageToast.show("Updated Weaselposition to " + sap.ui.getCore().AppContext.nextTarget, {
 				duration: 5000
 			});
 		},
@@ -127,14 +127,14 @@ sap.ui.define([
 		},
 
 		calculateRouteButtonPressed: function(oEvent) {
-			var b = sap.ui.getCore().AppContext.boxes.filter(function(n) {
+		/*	var b = sap.ui.getCore().AppContext.boxes.filter(function(n) {
 				return n;
 			}).length;
 			if (b < 8) {
 				MessageToast.show("Only " + b + " Boxes found!", {
 					Duration: 5000
 				});
-			} else {
+			} else {*/
 				sap.ui.getCore().AppContext.atTarget = 0;
 				var position = this.byId("RfidTagInput").getValue();
 				if (position != 10 && position != 9) {
@@ -159,7 +159,7 @@ sap.ui.define([
 					});
 
 				}
-			}
+			//}
 		},
 
 		loadSfasButtonPressed: function(oEvent) {
@@ -349,9 +349,10 @@ sap.ui.define([
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
+			this.skipSlow = 1;
 			sap.ui.getCore().AppContext.atTarget = 0;
 			//TODO NEED TO CHANGE THIS!!!!!
-			this.test = 0;
+			this.test = 1;
 		},
 
 		// get current status of weasel
@@ -502,7 +503,7 @@ sap.ui.define([
 
 		//DOES SOMETHING!
 		routingFunction: function(start) {
-
+			var skipSlow = this.skipSlow;
 			//station {nr, Boxes, #Boxes, Lvl)
 			var stations;
 			//Lvl 1 station to collect boxes
@@ -671,6 +672,12 @@ sap.ui.define([
 				} else if (unevenLvlTwos.length > 0) {
 					next = unevenLvlTwos[0];
 				}
+				if (skipSlow && next.Nr == 15) {
+					route.push({
+						Typ: "Drive",
+						Nr: 3
+					});
+				}
 				route.push({
 					Typ: "Drive",
 					Nr: next.NR
@@ -700,10 +707,17 @@ sap.ui.define([
 							Typ: "Load",
 							Nr: o
 						});
+
 						route.push({
 							Typ: "Load",
 							Nr: o + 1
 						});
+						if (skipSlow) {
+							route.push({
+								Typ: "Drive",
+								Nr: 3
+							});
+						}
 						route.push({
 							Typ: "Drive",
 							Nr: 16
