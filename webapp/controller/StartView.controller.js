@@ -87,7 +87,11 @@ sap.ui.define([
 					fields[f].setRows(5);
 				}
 			}
-			sap.ui.getCore().byId("__xmlview2--textCount").setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
+			sap.ui.getCore().byId("__xmlview2--textCount").setText("Delivered: " + sap.ui.getCore().AppContext.atTarget.length);
+			for (var i = 0; i < sap.ui.getCore().AppContext.atTarget.length - 1; i++){
+				sap.ui.getCore().byId("__xmlview3--l" + sap.ui.getCore().AppContext.atTarget[i]).setEnabled("false");
+				sap.ui.getCore().byId("__xmlviewu--u" + sap.ui.getCore().AppContext.atTarget[i]).setEnabled("false");
+			}
 		},
 
 		nextPosPressed: function(oEvent) {
@@ -135,7 +139,7 @@ sap.ui.define([
 					Duration: 5000
 				});
 			} else {
-				sap.ui.getCore().AppContext.atTarget = 0;
+				sap.ui.getCore().AppContext.atTarget = [];
 				var position = this.byId("RfidTagInput").getValue();
 				if (position != 10 && position != 9) {
 					MessageToast.show("Invalid startpoint", {
@@ -217,8 +221,8 @@ sap.ui.define([
 							sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
 						}
 						if (sap.ui.getCore().AppContext.nextPosition == 16) {
-							sap.ui.getCore().AppContext.atTarget++;
-							counter.setText("Delivered: " + sap.ui.getCore().AppContext.atTarget);
+							sap.ui.getCore().AppContext.atTarget.push(task.Nr);
+							counter.setText("Delivered: " + sap.ui.getCore().AppContext.atTarget.length);
 							var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
 							controller.setdownSfa(sfanr);
 						}
@@ -324,7 +328,7 @@ sap.ui.define([
 					sap.ui.getCore().AppContext.boxes[task.Nr].Station = sap.ui.getCore().AppContext.nextPosition;
 				}
 				if (sap.ui.getCore().AppContext.nextPosition == 16) {
-					sap.ui.getCore().AppContext.atTarget++;
+					sap.ui.getCore().AppContext.atTarget.push(task.Nr);
 					var sfanr = sap.ui.getCore().AppContext.boxes[task.Nr].Id;
 					this.setdownSfa(sfanr);
 				}
@@ -337,7 +341,7 @@ sap.ui.define([
 
 		unloadBox: function(oEvent) {
 			var boxId = oEvent.getParameter("id").charAt(oEvent.getParameter("id").length - 1);
-			sap.ui.getCore().AppContext.atTarget++;
+			sap.ui.getCore().AppContext.atTarget.push(boxId);
 			var sfanr = sap.ui.getCore().AppContext.boxes[boxId].Id;
 			this.setdownSfa(sfanr);
 			this.updateTextFields();
@@ -349,7 +353,7 @@ sap.ui.define([
 			this.areal = "WSLC1";
 			this.team = 2;
 			this.teamBox = "Kiste-2";
-			sap.ui.getCore().AppContext.atTarget = 0;
+			sap.ui.getCore().AppContext.atTarget = [];
 			//TODO NEED TO CHANGE THIS!!!!!
 			this.test = 0;
 		},
