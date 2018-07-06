@@ -14,7 +14,7 @@
 	class="Scan123"
 	id="Scan1">
 		<Button class="NextPosi" id="NextPosi3" text="Next Pos" press="nextPosPressed"/>
-		<Button class="StopButton" id="NextPosi4" text="Next Pos" press="nextPosPressedNoAction"/>
+		<Button class="StopButton" id="NextPosi4" text="Update Pos" press="nextPosPressedNoAction"/>
 	</f:SimpleForm>	
 	<f:SimpleForm 
 	class="NextPos"
